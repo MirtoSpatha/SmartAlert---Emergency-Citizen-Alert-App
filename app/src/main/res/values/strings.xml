@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">SmartAlert</string>
+    <string name="app_name">SmartAlert - Emergency Citizen Alert App</string>
+    <string name="e_mail" translatable="false">Email</string>
+    <string name="fullname">Full Name</string>
+    <string name="password">Password</string>
+    <string name="smart_alert_app">Emergency Alerted in Real Time, Feel safe!</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
 </resources>
