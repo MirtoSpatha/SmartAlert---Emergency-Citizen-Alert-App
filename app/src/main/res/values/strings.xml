@@ -6,4 +6,8 @@
     <string name="smart_alert_app">Emergency Alerted in Real Time, Feel safe!</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+    <string name="add_emergency">Add Emergency</string>
+    <string name="statistics">My Alerts Statistics</string>
+    <string name="welcome_user">Hello</string>
+    <string name="ongoing_alerts">Ongoing Alerts</string>
 </resources>

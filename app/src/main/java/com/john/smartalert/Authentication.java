@@ -84,6 +84,7 @@ public class Authentication extends AppCompatActivity {
                         {
                             Intent intent = new Intent(Authentication.this, EmployeeHomePage.class);
                             intent.putExtra("fullname",fullname.getText().toString());
+                            intent.putExtra("authId",auth.getUid().toString());
                             //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivity(intent);
                         }
@@ -91,6 +92,7 @@ public class Authentication extends AppCompatActivity {
                         {
                             Intent intent = new Intent(Authentication.this, UserHomePage.class);
                             intent.putExtra("fullname",fullname.getText().toString());
+                            intent.putExtra("authId",auth.getUid().toString());
                             //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivity(intent);
                         }
