@@ -118,6 +118,9 @@ public class Statistics extends AppCompatActivity {
     public void Thunderstorm(View view){
         showMessage("History of your Thunderstorm Alerts", thunderstormStatistics);
     }
+    public void Tornado(View view){
+        showMessage("History of your Tornado Alerts", tornadoStatistics);
+    }
 
     public void All_Statistics(View view){
         showMessage("History of all your Alerts", allStatistics);

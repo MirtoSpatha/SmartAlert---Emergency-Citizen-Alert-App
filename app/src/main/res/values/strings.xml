@@ -19,5 +19,19 @@
     <string name="tornado">Tornado</string>
     <string name="all_statistics">All Statistics</string>
     <string name="submit">Submit</string>
-    <string name="comments">Please, describe the incident.</string>
+    <string name="add_photo">Add a photo of the incident:</string>
+    <string name="select_incident">Select the type of the incident:</string>
+    <string name="describe_incident">Describe the incident (If you chose Other in the incident menu, specify the type of the incident.):</string>
+    <string name="mandatory_notice">The fields with * are mandatory.</string>
+    <string name="add_emergency_intro">Report an emergency that is happening where you are now.</string>
+    <string-array name="emergencies_array">
+        <item>Fire</item>
+        <item>Flood</item>
+        <item>Earthquake</item>
+        <item>Thunderstorm</item>
+        <item>Heatwave</item>
+        <item>Blizzard</item>
+        <item>Tornado</item>
+        <item>Other</item>
+    </string-array>
 </resources>
