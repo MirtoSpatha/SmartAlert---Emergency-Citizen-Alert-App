@@ -24,6 +24,6 @@ public class OngoingAlerts extends AppCompatActivity {
         textView4.setText("Hello "+ fullname+". Here you can see all the ongoing emergency events. " +
                 "Please, strictly follow the instructions of authorities, for your safety.");
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Users").child(authId);
+        reference = database.getReference("Confirmed Alerts");
     }
 }

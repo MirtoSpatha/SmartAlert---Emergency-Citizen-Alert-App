@@ -22,9 +22,8 @@
 
     <Button
         android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@android:drawable/alert_dark_frame"
+        android:layout_width="136dp"
+        android:layout_height="117dp"
         android:onClick="Flood"
         android:text="@string/flood"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -18,4 +18,6 @@
     <string name="blizzard">Blizzard</string>
     <string name="tornado">Tornado</string>
     <string name="all_statistics">All Statistics</string>
+    <string name="submit">Submit</string>
+    <string name="comments">Please, describe the incident.</string>
 </resources>
