@@ -16,6 +16,7 @@ public class UserHomePage extends AppCompatActivity {
         setContentView(R.layout.user_home_page);
         fullname = getIntent().getStringExtra("fullname");
         authId = getIntent().getStringExtra("authId");
+        textView2 = findViewById(R.id.textView2);
         textView2.setText("Welcome "+fullname+"! This is an Emergency Alert App.\n" +
                 " Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
                 "You can also add an emergency event when it happens close to you.");

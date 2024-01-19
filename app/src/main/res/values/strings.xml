@@ -10,4 +10,12 @@
     <string name="statistics">My Alerts Statistics</string>
     <string name="welcome_user">Hello</string>
     <string name="ongoing_alerts">Ongoing Alerts</string>
+    <string name="fire">Fire</string>
+    <string name="flood">Flood</string>
+    <string name="earthquake">Earthquake</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <string name="heatwave">Heatwave</string>
+    <string name="blizzard">Blizzard</string>
+    <string name="tornado">Tornado</string>
+    <string name="all_statistics">All Statistics</string>
 </resources>
