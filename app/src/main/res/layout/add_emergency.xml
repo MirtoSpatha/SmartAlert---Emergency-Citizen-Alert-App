@@ -94,7 +94,7 @@
             android:text="@string/mandatory_notice"
             android:textColor="#FF0000"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/button14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,18 +102,18 @@
             app:layout_constraintVertical_bias="0.929" />
 
         <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="61dp"
-                android:layout_height="57dp"
-                android:background="#D879E8"
-                android:onClick="photo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.897"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.746"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+            android:id="@+id/imageView"
+            android:layout_width="61dp"
+            android:layout_height="57dp"
+            android:background="#D879E8"
+            android:onClick="photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.892"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.711"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <TextView
             android:id="@+id/textView6"
@@ -123,16 +123,16 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.344"
+            app:layout_constraintHorizontal_bias="0.361"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.737" />
+            app:layout_constraintVertical_bias="0.699" />
 
         <Button
             android:id="@+id/button14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="672dp"
+            android:layout_marginTop="916dp"
             android:onClick="submit"
             android:text="@string/submit"
             android:textSize="18sp"
@@ -143,8 +143,8 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="355dp"
+            android:layout_height="384dp"
             android:layout_marginTop="3dp"
             app:layout_constraintBottom_toTopOf="@+id/textView9"
             app:layout_constraintEnd_toEndOf="parent"

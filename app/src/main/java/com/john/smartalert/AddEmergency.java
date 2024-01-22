@@ -1,5 +1,8 @@
 package com.john.smartalert;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +21,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -34,6 +38,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.play.core.integrity.IntegrityTokenRequest;
 import com.google.firebase.Firebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,6 +48,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
     String fullname, authid, selectedEmergency, userLocation;
@@ -51,6 +58,8 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     Uri imageuri;
     ImageView savedImage;
     StorageReference storageReference;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +86,8 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
-        //captureTxt = findViewById(R.id.idEventBrowse);
-        //captureImage
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("New Emergency");
     }
 
     @Override
@@ -87,23 +96,28 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback.
-    }
-
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
+        selectedEmergency = null;
     }
 
     public void photo(View view){
-        Intent intent = new Intent(Intent.ACTION_CAMERA_BUTTON);
+        ActivityResultLauncher<String> cameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if(result){
+                    Toast.makeText(getApplicationContext(), "Camera Permission GRANTED", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Camera Permission DENIED", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            cameraPermission.launch(android.Manifest.permission.CAMERA);
+        }
+        //Intent.ACTION_CAMERA_BUTTON
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
     }
@@ -132,7 +146,8 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                result[0] = true;
+                showMessage("Upload Image Failure", "Something went wrong when uploading the image. Please, try submitting the form again");
+                result[0] = false;
             }
         });
         return result[0];
@@ -145,7 +160,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onLocationChanged(@NonNull Location location) {
         userLocation = String.valueOf(location);
-        UserHomePage.locationManager.removeUpdates(this);
+        //UserHomePage.locationManager.removeUpdates(this);
     }
 
     @Override
@@ -166,9 +181,23 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             if(imageuri != null){
-                                uploadImage();
+                                if (!uploadImage()) return;
                             }
                             String time = getTime();
+                            String emergency_id = UUID.randomUUID().toString();
+                            reference.setValue(emergency_id);
+                            reference.child(emergency_id).setValue("UserId");
+                            reference.child(emergency_id).setValue("Category");
+                            reference.child(emergency_id).setValue("Comments");
+                            reference.child(emergency_id).setValue("Location");
+                            reference.child(emergency_id).setValue("Time");
+                            reference.child(emergency_id).setValue("Photo");
+                            reference.child(emergency_id).child("UserId").setValue(authid);
+                            reference.child(emergency_id).child("Category").setValue(selectedEmergency);
+                            reference.child(emergency_id).child("Comments").setValue(comments);
+                            reference.child(emergency_id).child("Location").setValue(userLocation);
+                            reference.child(emergency_id).child("Time").setValue(time);
+                            reference.child(emergency_id).child("photo").setValue(storageReference);
                             Toast.makeText(AddEmergency.this, "Emergency Submitted", Toast.LENGTH_SHORT).show();
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
