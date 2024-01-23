@@ -67,7 +67,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_emergency);
         fullname = getIntent().getStringExtra("fullname");
-        authid = getIntent().getStringExtra("authid");
+        authid = getIntent().getStringExtra("authId");
         textView7 = findViewById(R.id.textView7);
         textView8 = findViewById(R.id.textView8);
         SpannableString star=  new SpannableString("*");
@@ -172,18 +172,20 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                System.out.println(selectedEmergency);
-                System.out.println(comm);
-                System.out.println(UserHomePage.userLocation);
+                String file = "";
                 if(selectedEmergency != null && !comm.equals("") && UserHomePage.userLocation != null){
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             if(imageuri != null){
-                                if (!uploadImage()) return;
+                                if (!uploadImage())
+                                {
+                                    return;
+                                }
+                                file = storageReference.toString();
                             }
                             else
                             {
-                                storageReference = null;
+                                file = "";
                             }
                             String time = getTime();
                             String emergency_id = UUID.randomUUID().toString();
@@ -199,7 +201,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                             reference.child(emergency_id).child("Comments").setValue(comm);
                             reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
                             reference.child(emergency_id).child("Time").setValue(time);
-                            reference.child(emergency_id).child("photo").setValue(storageReference);
+                            reference.child(emergency_id).child("Photo").setValue(file);
                             Toast.makeText(AddEmergency.this, "Emergency Submitted", Toast.LENGTH_SHORT).show();
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
