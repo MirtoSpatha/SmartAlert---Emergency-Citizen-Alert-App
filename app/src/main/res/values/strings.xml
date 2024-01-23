@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartAlert - Emergency Citizen Alert App</string>
+    <string name="app_name">SmartAlert</string>
     <string name="e_mail" translatable="false">Email</string>
     <string name="fullname">Full Name</string>
     <string name="password">Password</string>
@@ -24,6 +24,11 @@
     <string name="describe_incident">Describe the incident (If you chose Other in the incident menu, specify the type of the incident.):</string>
     <string name="mandatory_notice">The fields with * are mandatory.</string>
     <string name="add_emergency_intro">Report an emergency that is happening where you are now.</string>
+    <string name="comments_hint">Put your comments here!</string>
+    <string name="confirm_submit">Are you sure you want to submit this incident?</string>
+    <string name="welcome">"Welcome "</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string-array name="emergencies_array">
         <item>Fire</item>
         <item>Flood</item>

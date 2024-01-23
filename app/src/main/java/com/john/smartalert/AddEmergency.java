@@ -189,13 +189,6 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                             }
                             String time = getTime();
                             String emergency_id = UUID.randomUUID().toString();
-                            reference.setValue(emergency_id);
-                            reference.child(emergency_id).setValue("UserId");
-                            reference.child(emergency_id).setValue("Category");
-                            reference.child(emergency_id).setValue("Comments");
-                            reference.child(emergency_id).setValue("Location");
-                            reference.child(emergency_id).setValue("Time");
-                            reference.child(emergency_id).setValue("Photo");
                             reference.child(emergency_id).child("UserId").setValue(authid);
                             reference.child(emergency_id).child("Category").setValue(selectedEmergency);
                             reference.child(emergency_id).child("Comments").setValue(comm);
@@ -216,8 +209,8 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to submit this incident?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage(R.string.confirm_submit).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     void showMessage(String title, String message){

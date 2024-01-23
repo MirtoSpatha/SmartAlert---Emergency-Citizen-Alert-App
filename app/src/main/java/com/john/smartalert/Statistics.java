@@ -34,9 +34,8 @@ public class Statistics extends AppCompatActivity {
         reference = database.getReference("Users").child(authId);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue()!=null){
-                    for (DataSnapshot snap : snapshot.getChildren()){
+            public void onDataChange(@NonNull DataSnapshot snap) {
+                if (snap.getValue()!=null){
                         if (snap.child("statistics").getValue()!=null){
                             allStatistics = snap.child("statistics").getValue().toString();
                         }
@@ -84,7 +83,6 @@ public class Statistics extends AppCompatActivity {
                         }
                         else {
                             blizzardStatistics = "You have no alerts for this category";
-                        }
                         }
                     }
                 }

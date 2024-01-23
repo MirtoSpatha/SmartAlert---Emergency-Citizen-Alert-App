@@ -44,13 +44,13 @@
         android:layout_marginTop="156dp"
         android:autofillHints=""
         android:ems="10"
+        android:hint="@string/password"
         android:inputType="textPassword"
-        android:text="@string/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="LabelFor"/>
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/textView"

@@ -22,12 +22,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class UserHomePage extends AppCompatActivity implements LocationListener{
     String fullname,authId;
     TextView textView2;
     private int ACCESS_FINE_LOCATION_CODE = 1;
     static LocationManager locationManager;
     static String userLocation;
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +39,14 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
         fullname = getIntent().getStringExtra("fullname");
         authId = getIntent().getStringExtra("authId");
         textView2 = findViewById(R.id.textView2);
-        textView2.setText("Welcome "+fullname+"!\n This is an Emergency Alert App.\n" +
-                " Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
+        textView2.setText(getString(R.string.welcome)+fullname+"!\nThis is an Emergency Alert App.\n" +
+                "Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
                 "You can also add an emergency event when it happens close to you.");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000,0, this);
+            userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude()+","+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
         } else {
             requestLocationPermission();
         }
@@ -113,6 +118,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
     public void onLocationChanged(@NonNull Location location) {
         userLocation = location.getLongitude() + "," + location.getLatitude();
         System.out.println(userLocation);
+        database =FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Users");
+        reference.child(authId).child("Location").setValue(userLocation);
         //locationManager.removeUpdates(this);
     }
 
