@@ -50,8 +50,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener, LocationListener {
-    String fullname, authid, selectedEmergency, userLocation;
+public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    String fullname, authid, selectedEmergency;
     Spinner spinner;
     TextView textView7, textView8;
     EditText comments;
@@ -60,6 +60,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     StorageReference storageReference;
     FirebaseDatabase database;
     DatabaseReference reference;
+    ActivityResultLauncher<String> cameraPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         textView7 = findViewById(R.id.textView7);
         textView8 = findViewById(R.id.textView8);
         SpannableString star=  new SpannableString("*");
-        star.setSpan(new ForegroundColorSpan(Color.RED), 0, 5, 0);
+        star.setSpan(new ForegroundColorSpan(Color.RED), 0, 1, 0);
         textView7.append(star);
         textView8.append(star);
         comments = findViewById(R.id.editTextTextMultiLine);
@@ -88,6 +89,22 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         spinner.setAdapter(adapter);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
+       cameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+                    @Override
+                    public void onActivityResult(Boolean result) {
+                        if(result){
+                            Toast.makeText(getApplicationContext(), "Camera Permission GRANTED", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Camera Permission DENIED", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+                if (ContextCompat.checkSelfPermission(AddEmergency.this,
+                        android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    cameraPermission.launch(android.Manifest.permission.CAMERA);
+                }
     }
 
     @Override
@@ -99,34 +116,26 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         selectedEmergency = null;
     }
 
-    public void photo(View view){
-        ActivityResultLauncher<String> cameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-            @Override
-            public void onActivityResult(Boolean result) {
-                if(result){
-                    Toast.makeText(getApplicationContext(), "Camera Permission GRANTED", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Camera Permission DENIED", Toast.LENGTH_SHORT).show();
 
-                }
-            }
-        });
+    public void photo(View view){
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             cameraPermission.launch(android.Manifest.permission.CAMERA);
         }
         //Intent.ACTION_CAMERA_BUTTON
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //MediaStore.ACTION_IMAGE_CAPTURE
+        Intent intent = new Intent(Intent.ACTION_CAMERA_BUTTON);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK){
             imageuri = data.getData();
+            savedImage.setAdjustViewBounds(true);
             savedImage.setImageURI(imageuri);
         }
     }
@@ -157,31 +166,24 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.forLanguageTag(""));
         return formatter.format(new Date());
     }
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        userLocation = String.valueOf(location);
-        //UserHomePage.locationManager.removeUpdates(this);
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) { }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) { }
-
 
     public void submit(View view){
+        String comm = comments.getText().toString();
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(selectedEmergency != null && comments != null && userLocation != null){
+                System.out.println(selectedEmergency);
+                System.out.println(comm);
+                System.out.println(UserHomePage.userLocation);
+                if(selectedEmergency != null && !comm.equals("") && UserHomePage.userLocation != null){
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             if(imageuri != null){
                                 if (!uploadImage()) return;
+                            }
+                            else
+                            {
+                                storageReference = null;
                             }
                             String time = getTime();
                             String emergency_id = UUID.randomUUID().toString();
@@ -194,8 +196,8 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                             reference.child(emergency_id).setValue("Photo");
                             reference.child(emergency_id).child("UserId").setValue(authid);
                             reference.child(emergency_id).child("Category").setValue(selectedEmergency);
-                            reference.child(emergency_id).child("Comments").setValue(comments);
-                            reference.child(emergency_id).child("Location").setValue(userLocation);
+                            reference.child(emergency_id).child("Comments").setValue(comm);
+                            reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
                             reference.child(emergency_id).child("Time").setValue(time);
                             reference.child(emergency_id).child("photo").setValue(storageReference);
                             Toast.makeText(AddEmergency.this, "Emergency Submitted", Toast.LENGTH_SHORT).show();

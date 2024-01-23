@@ -13,18 +13,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.camera2.CameraManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class UserHomePage extends AppCompatActivity {
+public class UserHomePage extends AppCompatActivity implements LocationListener{
     String fullname,authId;
     TextView textView2;
     private int ACCESS_FINE_LOCATION_CODE = 1;
     static LocationManager locationManager;
+    static String userLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +41,7 @@ public class UserHomePage extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, (LocationListener) this, null);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, this);
         } else {
             requestLocationPermission();
         }
@@ -106,4 +109,19 @@ public class UserHomePage extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        userLocation = location.getLongitude() + "," + location.getLatitude();
+        System.out.println(userLocation);
+        //locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) { }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) { }
 }
