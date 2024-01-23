@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -61,6 +63,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     FirebaseDatabase database;
     DatabaseReference reference;
     ActivityResultLauncher<String> cameraPermission;
+    ActivityResultLauncher<String> storagePermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
+        savedImage = findViewById(R.id.imageView2);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
        cameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -101,10 +105,26 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
                 });
+        storagePermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+            @Override
+            public void onActivityResult(Boolean result) {
+                if(result){
+                    Toast.makeText(getApplicationContext(), "Storage Permission GRANTED", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Storage Permission DENIED", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
                 if (ContextCompat.checkSelfPermission(AddEmergency.this,
                         android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     cameraPermission.launch(android.Manifest.permission.CAMERA);
                 }
+        if (ContextCompat.checkSelfPermission(AddEmergency.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            cameraPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
     }
 
     @Override
@@ -122,11 +142,20 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             cameraPermission.launch(android.Manifest.permission.CAMERA);
         }
+        if (ContextCompat.checkSelfPermission(AddEmergency.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            cameraPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
         //Intent.ACTION_CAMERA_BUTTON
         //MediaStore.ACTION_IMAGE_CAPTURE
-        Intent intent = new Intent(Intent.ACTION_CAMERA_BUTTON);
-        intent.setType("image/*");
-        startActivityForResult(intent, 1);
+        final int REQUEST_IMAGE_CAPTURE = 1;
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            } catch (ActivityNotFoundException e) {
+                showMessage("Activity not found", e.toString());
+            }
+
     }
 
 
@@ -135,7 +164,9 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK){
             imageuri = data.getData();
-            savedImage.setAdjustViewBounds(true);
+            //savedImage.getLayoutParams().width = 120;
+            //savedImage.getLayoutParams().height = 220;
+            //savedImage.setAdjustViewBounds(true);
             savedImage.setImageURI(imageuri);
         }
     }

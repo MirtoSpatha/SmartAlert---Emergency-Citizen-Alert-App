@@ -46,7 +46,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000,0, this);
-            userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude()+","+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+            //userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude()+","+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
         } else {
             requestLocationPermission();
         }
