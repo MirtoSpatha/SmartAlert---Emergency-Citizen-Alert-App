@@ -54,6 +54,8 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
 
     public void add_emergency(View view){
         Intent intent = new Intent(UserHomePage.this, AddEmergency.class);
+        System.out.println(fullname.toString());
+        System.out.println(authId);
         intent.putExtra("fullname",fullname.toString());
         intent.putExtra("authId",authId);
         startActivity(intent);
@@ -117,7 +119,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
     @Override
     public void onLocationChanged(@NonNull Location location) {
         userLocation = location.getLongitude() + "," + location.getLatitude();
-        System.out.println(userLocation);
+        //System.out.println(userLocation);
         database =FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Users");
         reference.child(authId).child("Location").setValue(userLocation);

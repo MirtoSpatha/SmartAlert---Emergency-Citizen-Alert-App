@@ -164,9 +164,10 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK){
             imageuri = data.getData();
-            //savedImage.getLayoutParams().width = 120;
-            //savedImage.getLayoutParams().height = 220;
-            //savedImage.setAdjustViewBounds(true);
+            savedImage.getLayoutParams().width = 120;
+            savedImage.getLayoutParams().height = 220;
+            savedImage.setAdjustViewBounds(true);
+            System.out.println("ok");
             savedImage.setImageURI(imageuri);
         }
     }
@@ -194,7 +195,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private String getTime(){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.forLanguageTag(""));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.forLanguageTag(""));
         return formatter.format(new Date());
     }
 
@@ -216,7 +217,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                             }
                             else
                             {
-                                file = "";
+                                file = "-";
                             }
                             String time = getTime();
                             String emergency_id = UUID.randomUUID().toString();
