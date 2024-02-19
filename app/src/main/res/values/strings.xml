@@ -29,6 +29,23 @@
     <string name="welcome">"Welcome "</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="emergencies">Show Emergencies</string>
+    <string name="Category">Category of the event</string>
+    <string name="Location">Location of the event</string>
+    <string name="Address">Address of the event</string>
+    <string name="Time">First report</string>
+    <string name="Reports">Number of reports</string>
+    <string name="Inspect">Inspect</string>
+    <string name="Accept">Accept</string>
+    <string name="Decline">Decline</string>
+    <string name="Time2">Time of the report</string>
+    <string name="Location2">Location of the incident</string>
+    <string name="Comment">Comment</string>
+    <string name="Photo">Photo of the incident</string>
+    <string name="Category2">Category of the emergence </string>
+    <string name="region">Region of the emergence</string>
+    <string name="Alert">Alert</string>
+    <string name="Back">Home page</string>
     <string-array name="emergencies_array">
         <item>Fire</item>
         <item>Flood</item>

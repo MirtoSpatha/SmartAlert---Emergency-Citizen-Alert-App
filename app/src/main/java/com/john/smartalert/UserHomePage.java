@@ -1,29 +1,35 @@
 package com.john.smartalert;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.hardware.camera2.CameraManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 public class UserHomePage extends AppCompatActivity implements LocationListener{
     String fullname,authId;
@@ -32,16 +38,16 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
     static LocationManager locationManager;
     static String userLocation;
     FirebaseDatabase database;
+    DatabaseReference reference;
+    SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_home_page);
         fullname = getIntent().getStringExtra("fullname");
         authId = getIntent().getStringExtra("authId");
-        textView2 = findViewById(R.id.textView2);
-        textView2.setText(getString(R.string.welcome)+fullname+"!\nThis is an Emergency Alert App.\n" +
-                "Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
-                "You can also add an emergency event when it happens close to you.");
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("Alerts");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -50,25 +56,108 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
         } else {
             requestLocationPermission();
         }
+        preferences = getPreferences(MODE_PRIVATE);
+        try {
+            userLocation = preferences.getString("location","0,0");
+        }
+        catch (Exception e){
+            System.out.println(e.getLocalizedMessage());
+        }
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                HashMap<String, String> alert =new HashMap<>();
+                alert.put("alertKey",snapshot.getKey());
+                for (DataSnapshot data :snapshot.getChildren()){
+                    alert.put(data.getKey().toString(),data.getValue().toString());
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+                LocalDateTime date = LocalDateTime.parse(alert.get("time"),formatter);;
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(date,LocalDateTime.now());
+                if (duration.toHours()<24) {
+                    String[] temp = alert.get("location").split(",");
+                    double lat = Double.parseDouble(temp[0]);
+                    double lon = Double.parseDouble(temp[1]);
+                    String[] location = userLocation.split(",");
+                    double ulat = Double.parseDouble(location[0]);
+                    double ulon = Double.parseDouble(location[1]);
+                    double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
+                    if (distance <= 10) {
+                        Intent intent = new Intent(UserHomePage.this, Alert.class);
+                        intent.putExtra("address", alert.get(" address"));
+                        intent.putExtra("category", alert.get("category"));
+                        intent.putExtra("time", alert.get("time"));
+                        startActivity(intent);
+
+                        reference = database.getReference("Users/"+authId+"/statistics/"+alert.get("alertKey"));
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                System.out.println(snapshot.getValue());
+                                if(snapshot.getValue() == null){
+                                    reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
+                                    reference.child("category").setValue(alert.get("category"));
+                                    reference.child("time").setValue(alert.get("time"));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+        textView2 = findViewById(R.id.textView2);
+        textView2.setText(getString(R.string.welcome)+fullname+"!\nThis is an Emergency Alert App.\n" +
+                "Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
+                "You can also add an emergency event when it happens close to you.");
+
     }
 
     public void add_emergency(View view){
         Intent intent = new Intent(UserHomePage.this, AddEmergency.class);
-        intent.putExtra("fullname",fullname.toString());
+        intent.putExtra("fullname",fullname);
         intent.putExtra("authId",authId);
         startActivity(intent);
     }
 
     public void ongoing_alerts(View view){
         Intent intent = new Intent(UserHomePage.this, OngoingAlerts.class);
-        intent.putExtra("fullname",fullname.toString());
+        intent.putExtra("fullname",fullname);
         intent.putExtra("authId",authId);
         startActivity(intent);
     }
 
     public void statistics(View view){
         Intent intent = new Intent(UserHomePage.this, Statistics.class);
-        intent.putExtra("fullname",fullname.toString());
+        intent.putExtra("fullname",fullname);
         intent.putExtra("authId",authId);
         startActivity(intent);
     }
@@ -116,11 +205,15 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        userLocation = location.getLongitude() + "," + location.getLatitude();
-        System.out.println(userLocation);
-        database =FirebaseDatabase.getInstance();
+        userLocation = location.getLatitude() + "," + location.getLongitude();
+        preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("location",userLocation);
+        editor.apply();
+//        System.out.println(userLocation);
+        /*database =FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Users");
-        reference.child(authId).child("Location").setValue(userLocation);
+        reference.child(authId).child("Location").setValue(userLocation);*/
         //locationManager.removeUpdates(this);
     }
 
