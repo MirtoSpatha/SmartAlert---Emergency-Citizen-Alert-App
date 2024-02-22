@@ -1,5 +1,6 @@
 package com.john.smartalert;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,8 +32,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
-public class UserHomePage extends AppCompatActivity implements LocationListener{
-    String fullname,authId;
+public class UserHomePage extends AppCompatActivity implements LocationListener {
+    String fullname, authId, language;
     TextView textView2;
     private int ACCESS_FINE_LOCATION_CODE = 1;
     static LocationManager locationManager;
@@ -40,42 +41,60 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
     FirebaseDatabase database;
     DatabaseReference reference;
     SharedPreferences preferences;
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_home_page);
         fullname = getIntent().getStringExtra("fullname");
         authId = getIntent().getStringExtra("authId");
+        language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
+        Authentication.setLocale(UserHomePage.this, language);
+        //recreate();
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Alerts");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000,0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, this);
             //userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude()+","+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
         } else {
             requestLocationPermission();
         }
         preferences = getPreferences(MODE_PRIVATE);
         try {
-            userLocation = preferences.getString("location","0,0");
-        }
-        catch (Exception e){
+            userLocation = preferences.getString("location", "0,0");
+        } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
+        ongoing_alerts(null);
+        textView2 = findViewById(R.id.textView2);
+        textView2.setText(getString(R.string.welcome) + fullname + getString(R.string.user_homepage_intro));
+    }
+
+    public void add_emergency(View view) {
+        Intent intent = new Intent(UserHomePage.this, AddEmergency.class);
+        intent.putExtra("fullname", fullname);
+        intent.putExtra("authId", authId);
+        startActivity(intent);
+    }
+
+    public void ongoing_alerts(View view) {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                HashMap<String, String> alert =new HashMap<>();
-                alert.put("alertKey",snapshot.getKey());
-                for (DataSnapshot data :snapshot.getChildren()){
-                    alert.put(data.getKey().toString(),data.getValue().toString());
+                HashMap<String, String> alert = new HashMap<>();
+                alert.put("alertKey", snapshot.getKey());
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    alert.put(data.getKey().toString(), data.getValue().toString());
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-                LocalDateTime date = LocalDateTime.parse(alert.get("time"),formatter);;
+                LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
+                ;
                 LocalDateTime now = LocalDateTime.now();
-                Duration duration = Duration.between(date,LocalDateTime.now());
-                if (duration.toHours()<24) {
+                Duration duration = Duration.between(date, LocalDateTime.now());
+                if (duration.toHours() < 24) {
                     String[] temp = alert.get("location").split(",");
                     double lat = Double.parseDouble(temp[0]);
                     double lon = Double.parseDouble(temp[1]);
@@ -90,12 +109,12 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
                         intent.putExtra("time", alert.get("time"));
                         startActivity(intent);
 
-                        reference = database.getReference("Users/"+authId+"/statistics/"+alert.get("alertKey"));
+                        reference = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
                         reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 System.out.println(snapshot.getValue());
-                                if(snapshot.getValue() == null){
+                                if (snapshot.getValue() == null) {
                                     reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
                                     reference.child("category").setValue(alert.get("category"));
                                     reference.child("time").setValue(alert.get("time"));
@@ -131,34 +150,12 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
 
             }
         });
-
-
-
-        textView2 = findViewById(R.id.textView2);
-        textView2.setText(getString(R.string.welcome)+fullname+"!\nThis is an Emergency Alert App.\n" +
-                "Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.\n" +
-                "You can also add an emergency event when it happens close to you.");
-
     }
 
-    public void add_emergency(View view){
-        Intent intent = new Intent(UserHomePage.this, AddEmergency.class);
-        intent.putExtra("fullname",fullname);
-        intent.putExtra("authId",authId);
-        startActivity(intent);
-    }
-
-    public void ongoing_alerts(View view){
-        Intent intent = new Intent(UserHomePage.this, OngoingAlerts.class);
-        intent.putExtra("fullname",fullname);
-        intent.putExtra("authId",authId);
-        startActivity(intent);
-    }
-
-    public void statistics(View view){
+    public void statistics(View view) {
         Intent intent = new Intent(UserHomePage.this, Statistics.class);
-        intent.putExtra("fullname",fullname);
-        intent.putExtra("authId",authId);
+        intent.putExtra("fullname", fullname);
+        intent.putExtra("authId", authId);
         startActivity(intent);
     }
 
@@ -167,16 +164,16 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
                 android.Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed to know the location of emergency.")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.permission_needed))
+                    .setMessage(getString(R.string.permission_location))
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(UserHomePage.this,
                                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION_CODE);
                         }
                     })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -195,9 +192,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ACCESS_FINE_LOCATION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Location Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.location_granted), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Location Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.location_denied), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -208,7 +205,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
         userLocation = location.getLatitude() + "," + location.getLongitude();
         preferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("location",userLocation);
+        editor.putString("location", userLocation);
         editor.apply();
 //        System.out.println(userLocation);
         /*database =FirebaseDatabase.getInstance();
@@ -218,11 +215,15 @@ public class UserHomePage extends AppCompatActivity implements LocationListener{
     }
 
     @Override
-    public void onProviderDisabled(@NonNull String provider) { }
+    public void onProviderDisabled(@NonNull String provider) {
+    }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
-    public void onProviderEnabled(@NonNull String provider) { }
+    public void onProviderEnabled(@NonNull String provider) {
+    }
+
 }

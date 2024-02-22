@@ -1,9 +1,16 @@
 package com.john.smartalert;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,11 +25,14 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Authentication extends AppCompatActivity {
+import java.util.Locale;
+
+public class Authentication extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText email,password,fullname;
     FirebaseAuth auth;
     FirebaseUser user;
     FirebaseDatabase database;
+    Spinner spinner;
 
 
     @Override
@@ -39,6 +49,18 @@ public class Authentication extends AppCompatActivity {
             //Button b = findViewById(R.id.button);
             //b.setVisibility(View.GONE);
         }
+        spinner = findViewById(R.id.spinner2);
+        spinner.setOnItemSelectedListener(this);
+        // Create an ArrayAdapter using the string array and a default spinner layout.
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.languages_array,
+                android.R.layout.simple_spinner_item
+        );
+        // Specify the layout to use when the list of choices appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner.
+        spinner.setAdapter(adapter);
     }
     public void signup(View view){
         if(!email.getText().toString().isEmpty() &&
@@ -54,14 +76,14 @@ public class Authentication extends AppCompatActivity {
                                 DatabaseReference reference2 = database.getReference("Users");
                                 reference2.child(user.getUid()).child("UserID").setValue(user.getUid().toString());
                                 reference2.child(user.getUid()).child("Fullname").setValue(fullname.getText().toString());
-                                showMessage("Success","User profile created!");
+                                showMessage(getString(R.string.success),getString(R.string.user_profile_created));
                             }else {
-                                showMessage("Error",task.getException().getLocalizedMessage());
+                                showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                             }
                         }
                     });
         }else {
-            showMessage("Error","Please provide all info!");
+            showMessage(getString(R.string.error),getString(R.string.provide_all_info));
         }
     }
     private void updateUser(FirebaseUser user, String fullname){
@@ -78,7 +100,7 @@ public class Authentication extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
-                        showMessage("Success","User signed in successfully!");
+                        showMessage(getString(R.string.success),getString(R.string.successful_sign_in));
                         if(email.getText().toString().contains("@civilprotection.gr"))
                         {
                             Intent intent = new Intent(Authentication.this, EmployeeHomePage.class);
@@ -96,7 +118,7 @@ public class Authentication extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }else {
-                        showMessage("Error",task.getException().getLocalizedMessage());
+                        showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                     }
                 }
             });
@@ -105,5 +127,34 @@ public class Authentication extends AppCompatActivity {
 
     void showMessage(String title, String message){
         new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
+    }
+    public static void setLocale(Activity activity, String language){
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+        SharedPreferences.Editor editor = activity.getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("Language", language);
+        editor.apply();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(parent.getItemAtPosition(position).toString().equals("English")){
+            setLocale(this, "en");
+            recreate();
+        }
+        else if (parent.getItemAtPosition(position).toString().equals("Greek")){
+            setLocale(this, "el");
+            recreate();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        setLocale(this, "en");
+        recreate();
     }
 }

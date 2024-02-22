@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -43,7 +44,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    String fullname, authid, selectedEmergency;
+    String fullname, authid, language, selectedEmergency;
     Spinner spinner;
     TextView textView7, textView8;
     EditText comments;
@@ -61,6 +62,9 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.add_emergency);
         fullname = getIntent().getStringExtra("fullname");
         authid = getIntent().getStringExtra("authId");
+        language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
+        Authentication.setLocale(AddEmergency.this, language);
+        //recreate();
         textView7 = findViewById(R.id.textView7);
         textView8 = findViewById(R.id.textView8);
         SpannableString star=  new SpannableString("*");
@@ -87,10 +91,10 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onActivityResult(Boolean result) {
                         if(result){
-                            Toast.makeText(getApplicationContext(), "Camera Permission GRANTED", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.camera_granted), Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(), "Camera Permission DENIED", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.camera_denied), Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -99,10 +103,10 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onActivityResult(Boolean result) {
                 if(result){
-                    Toast.makeText(getApplicationContext(), "Storage Permission GRANTED", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.storage_granted), Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Storage Permission DENIED", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.storage_denied), Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -143,7 +147,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
             try {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             } catch (ActivityNotFoundException e) {
-                showMessage("Activity not found", e.toString());
+                showMessage(getString(R.string.activity_not_found), e.toString());
             }
 
     }
@@ -176,7 +180,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                showMessage("Upload Image Failure", "Something went wrong when uploading the image. Please, try submitting the form again");
+                showMessage(getString(R.string.upload_failure_title), getString(R.string.upload_failure_text));
                 result[0] = false;
             }
         });
@@ -216,7 +220,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                             reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
                             reference.child(emergency_id).child("Time").setValue(time);
                             reference.child(emergency_id).child("Photo").setValue(file);
-                            Toast.makeText(AddEmergency.this, "Emergency Submitted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddEmergency.this, getString(R.string.emergency_submitted), Toast.LENGTH_SHORT).show();
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
@@ -224,7 +228,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
                 else{
-                    showMessage("Invalid Submission", "Please, fill in all the fields with *.");
+                    showMessage(getString(R.string.invalid_submission_title), getString(R.string.invalid_submission_text));
                 }
             }
         };

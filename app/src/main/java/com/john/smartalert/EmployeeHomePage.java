@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class EmployeeHomePage extends AppCompatActivity {
-    String fullname,authId;
+    String fullname,authId,language;
     FirebaseDatabase database;
     DatabaseReference reference;
     DatabaseReference reference2;
@@ -49,6 +49,9 @@ public class EmployeeHomePage extends AppCompatActivity {
         setContentView(R.layout.employee_home_page);
         fullname = getIntent().getStringExtra("fullname");
         authId = getIntent().getStringExtra("authId");
+        language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
+        Authentication.setLocale(EmployeeHomePage.this, language);
+        //recreate();
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
 //        newEmergencies = new HashMap<>();

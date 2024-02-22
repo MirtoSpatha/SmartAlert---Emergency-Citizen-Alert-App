@@ -21,6 +21,7 @@ public class Emergencies extends AppCompatActivity {
     HashMap<String,HashMap<String,String>> emergencies;
     ArrayList<String> result;
 
+    String language;
     LinearLayout groups;
     RequestQueue requestQueue;
     ArrayList<String> address;
@@ -28,6 +29,9 @@ public class Emergencies extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emergencies_page);
+        language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
+        Authentication.setLocale(Emergencies.this, language);
+        //recreate();
         requestQueue = Volley.newRequestQueue(this);
         result = getIntent().getStringArrayListExtra("Results");
         address = getIntent().getStringArrayListExtra("Address");

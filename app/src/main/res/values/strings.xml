@@ -8,7 +8,7 @@
     <string name="sign_in">Sign In</string>
     <string name="add_emergency">Add Emergency</string>
     <string name="statistics">My Alerts Statistics</string>
-    <string name="welcome_user">Hello</string>
+    <string name="welcome_user">Hello </string>
     <string name="ongoing_alerts">Ongoing Alerts</string>
     <string name="fire">Fire</string>
     <string name="flood">Flood</string>
@@ -21,14 +21,16 @@
     <string name="submit">Submit</string>
     <string name="add_photo">Add a photo of the incident:</string>
     <string name="select_incident">Select the type of the incident:</string>
-    <string name="describe_incident">Describe the incident (If you chose Other in the incident menu, specify the type of the incident.):</string>
+    <string name="describe_incident">Describe the incident:</string>
     <string name="mandatory_notice">The fields with * are mandatory.</string>
     <string name="add_emergency_intro">Report an emergency that is happening where you are now.</string>
-    <string name="comments_hint">Put your comments here!</string>
+    <string name="comments_hint">Put your comments here.</string>
     <string name="confirm_submit">Are you sure you want to submit this incident?</string>
     <string name="welcome">"Welcome "</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="emergencies">Show Emergencies</string>
     <string name="Category">Category of the event</string>
     <string name="Location">Location of the event</string>
@@ -46,6 +48,47 @@
     <string name="region">Region of the emergence</string>
     <string name="Alert">Alert</string>
     <string name="Back">Home page</string>
+    <string name="permission_needed">Permission needed</string>
+    <string name="permission_location">This permission is needed to know the location of emergency.</string>
+    <string name="location_granted">Location Permission GRANTED</string>
+    <string name="location_denied">Location Permission DENIED</string>
+    <string name="camera_granted">Camera Permission GRANTED</string>
+    <string name="camera_denied">Camera Permission DENIED</string>
+    <string name="storage_granted">Storage Permission GRANTED</string>
+    <string name="storage_denied">Storage Permission DENIED</string>
+    <string name="activity_not_found">Activity not found</string>
+    <string name="upload_failure_title">Upload Image Failure</string>
+    <string name="upload_failure_text">Something went wrong when uploading the image. Please, try submitting the form again</string>
+    <string name="emergency_submitted">Emergency Submitted</string>
+    <string name="invalid_submission_title">Invalid Submission</string>
+    <string name="invalid_submission_text">Please, fill in all the fields with *.</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="user_profile_created">User profile created!</string>
+    <string name="provide_all_info">"Please provide all info!"</string>
+    <string name="successful_sign_in">User signed in successfully!</string>
+    <string name="sms_send">sms send</string>
+    <string name="user_homepage_intro">!&lt;br /&gt;This is an Emergency Alert App.&lt;br /&gt;Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies near you.&lt;br /&gt;
+                You can also add an emergency event when it happens close to you.</string>
+    <string name="ongoing_alerts_intro">. Here you can see all the ongoing emergency events. &lt;br /&gt;Please, strictly follow the instructions of authorities, for your safety.</string>
+    <string name="statistics_intro">. Here you can see all the times you were notified for an emergency, by type of incident.</string>
+    <string name="no_alerts">You have no alerts for this category.</string>
+    <string name="fire_alerts">History of your Fire Alerts</string>
+    <string name="flood_alerts">History of your Flood Alerts</string>
+    <string name="tornado_alerts">History of your Tornado Alerts</string>
+    <string name="blizzard_alerts">History of your Blizzard Alerts</string>
+    <string name="earthquake_alerts">History of your Earthquake Alerts</string>
+    <string name="heatwave_alerts">History of your Heatwave Alerts</string>
+    <string name="thunderstorm_alerts">History of your Thunderstorm Alerts</string>
+    <string name="all_alerts">History of all your Alerts</string>
+    <string name="alert_text_intro"><b>Emergency Alert:</b><br>Civil Protection Greece </br></string>
+    <string name="fire_text"><br>Fire approaching your area. Evacuate immediately! Choose the safest road and avoid driving near fire. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/dasikes-pyrkagies">https://civilprotection.gov.gr/odigies-prostasias/dasikes-pyrkagies</a></br></string>
+    <string name="flood_text"><br>Flooding is expected in your area. Move to a higher ground. Do not attempt to travel unless you are fleeing an area subject to flooding or under an evacuation order. Never drive through flooded roads. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/plimmyres">https://civilprotection.gov.gr/odigies-prostasias/plimmyres</a></br></string>
+    <string name="tornado_text"><br>Tornado warning in your area. Take shelter now in a basement or an interior room on the lowest floor of a sturdy building. Do not attempt to travel. Move to the closest shelter to protect yourself from flying debris. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/thyellodeis-anemoi">https://civilprotection.gov.gr/odigies-prostasias/thyellodeis-anemoi</a></br></string>
+    <string name="earthquake_text"><br>Earthquake at your location. Drop down to your hands and knees. Find a table or desk to hide under and hold onto. If you can't find a table, cover the back of your neck with your hands. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/seismoi">https://civilprotection.gov.gr/odigies-prostasias/seismoi</a></br></string>
+    <string name="heatwave_text"><br>High temperatures expected in your area. Drink plenty of water and take cooling measures. Check of your neighbors, especially the elders and children. Avoid physical exercise outdoors. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/kaysonas">https://civilprotection.gov.gr/odigies-prostasias/kaysonas</a></br></string>
+    <string name="thunderstorm_text"><br>Thunderstorm in progress in your area. Destructive winds. Take shelter in a sturdy building away from windows. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/kataigides">https://civilprotection.gov.gr/odigies-prostasias/kataigides</a></br></string>
+    <string name="blizzard_text"><br>Blizzard in progress in your area. Take heating measures. Ensure water supply. Do not attempt to travel. Remain on alert and follow the guidelines of the Authorities at any given moment. Get informed about protective action guidelines: <a href="https://civilprotection.gov.gr/odigies-prostasias/hionoptoseis-pagetos">https://civilprotection.gov.gr/odigies-prostasias/hionoptoseis-pagetos</a></br></string>
     <string-array name="emergencies_array">
         <item>Fire</item>
         <item>Flood</item>
@@ -54,6 +97,9 @@
         <item>Heatwave</item>
         <item>Blizzard</item>
         <item>Tornado</item>
-        <item>Other</item>
+    </string-array>
+    <string-array name="languages_array">
+        <item>Greek</item>
+        <item>English</item>
     </string-array>
 </resources>

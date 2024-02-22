@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartAlert</string>
+    <string name="fullname">Πλήρες Όνομα</string>
+    <string name="password">Κωδικός Πρόσβασης</string>
+    <string name="smart_alert_app">Ειδοποιηθείτε για έκτακτες ανάγκες σε πραγματικό χρόνο, Νιώστε ασφαλείς!</string>
+    <string name="sign_up">Εγγραφή</string>
+    <string name="sign_in">Σύνδεση</string>
+    <string name="add_emergency">Προσθήκη Περιστατικού</string>
+    <string name="statistics">Τα Στατιστικά Μου</string>
+    <string name="welcome_user">"Γεια σου "</string>
+    <string name="ongoing_alerts">Τρέχοντες Ειδοποιήσεις</string>
+    <string name="fire">Πυρκαγιά</string>
+    <string name="flood">Πλημμύρα</string>
+    <string name="earthquake">Σεισμός</string>
+    <string name="thunderstorm">Καταιγίδα</string>
+    <string name="heatwave">Καύσωνας</string>
+    <string name="blizzard">Χιονόπτωση</string>
+    <string name="tornado">Θυελλώδεις Άνεμοι</string>
+    <string name="all_statistics">Όλα τα Στατιστικά</string>
+    <string name="submit">Υποβολή</string>
+    <string name="add_photo">Πρόσθεσε μια φωτογραφία του περιστατικού:</string>
+    <string name="select_incident">Επίλεξε το είδος του περιστατικού:</string>
+    <string name="describe_incident">Περίγραψε το περιστατικό:</string>
+    <string name="mandatory_notice">Τα πεδία με * είναι υποχρεωτικά.</string>
+    <string name="add_emergency_intro">Ανάφερε μια κατάσταση έκτακτης ανάγκης που συμβαίνει εκεί που βρίσκεσαι τώρα.</string>
+    <string name="comments_hint">Πρόσθεσε τα σχόλιά σου εδώ.</string>
+    <string name="confirm_submit">Είσαι σίγουρος/η ότι θέλεις να υποβάλλεις το συμβάν;</string>
+    <string name="welcome">Καλωσήρθες</string>
+    <string name="yes">Ναι</string>
+    <string name="no">Όχι</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="emergencies">Εμφάνιση Περιστατικών</string>
+    <string name="Category">Κατηγορία Περιστατικού</string>
+    <string name="Location">Τοποθεσία Περιστατικού</string>
+    <string name="Address">Διεύθυνση Περιστατικού</string>
+    <string name="Time">Πρώτη Αναφορά</string>
+    <string name="Reports">Πλήθος Αναφορών</string>
+    <string name="Inspect">Διερεύνηση</string>
+    <string name="Accept">Έγκριση</string>
+    <string name="Decline">Απόρριψη</string>
+    <string name="Time2">Ώρα Αναφοράς</string>
+    <string name="Location2">Τοποθεσία Περιστατικού</string>
+    <string name="Comment">Σχόλιο</string>
+    <string name="Photo">Φωτογραφία Περιστατικού</string>
+    <string name="Category2">Κατηγορία Περιστατικού</string>
+    <string name="region">Περιοχή Περιστατικού</string>
+    <string name="Alert">Ειδοποίηση</string>
+    <string name="Back">Αρχική Οθόνη</string>
+    <string name="permission_needed">Απαιτείται Άδεια</string>
+    <string name="permission_location">Αυτή η άδεια είναι απαραίτητη για να μπορείς να ειδοποιηθείς για την τοποθεσία μιας έκτακτης ανάγκης.</string>
+    <string name="location_granted">Άδεια Τοποθεσίας ΧΟΡΗΓΉΘΗΚΕ</string>
+    <string name="location_denied">Άδεια Τοποθεσίας ΑΠΟΡΡΊΦΘΗΚΕ</string>
+    <string name="camera_granted">Άδεια Κάμερας ΧΟΡΗΓΉΘΗΚΕ</string>
+    <string name="camera_denied">Άδεια Κάμερας ΑΠΟΡΡΊΦΘΗΚΕ</string>
+    <string name="storage_granted">Άδεια Αποθηκευτικού Χώρου ΧΟΡΗΓΉΘΗΚΕ</string>
+    <string name="storage_denied">Άδεια Αποθηκευτικού Χώρου ΑΠΟΡΡΊΦΘΗΚΕ</string>
+    <string name="activity_not_found">Η οθόνη δεν βρέθηκε</string>
+    <string name="upload_failure_title">Αποτυχία Μεταφόρτωσης Εικόνας</string>
+    <string name="upload_failure_text">Παρουσιάστηκε κάποιο πρόβλημα κατά τη μεταφόρτωση της εικόνας. Παρακαλούμε, δοκίμασε να υποβάλεις ξανά τη φόρμα.</string>
+    <string name="emergency_submitted">Επιτυχία Υποβολής</string>
+    <string name="invalid_submission_title">Μη Έγκυρη Υποβολή</string>
+    <string name="invalid_submission_text">Παρακαλώ, συμπλήρωσε όλα τα πεδία με *.</string>
+    <string name="success">Επιτυχία</string>
+    <string name="error">Σφάλμα</string>
+    <string name="user_profile_created">Προφίλ Χρήστη Δημιουργήθηκε!</string>
+    <string name="provide_all_info">Παρακαλώ δώσε όλες τις πληροφορίες!</string>
+    <string name="successful_sign_in">Συνδέθηκες με επιτυχία!</string>
+    <string name="sms_send">Μήνυμα Στάλθηκε</string>
+    <string name="user_homepage_intro">!&lt;br /&gt;Αυτή είναι μια εφαρμογή ειδοποίησης έκτακτης ανάγκης.&lt;br /&gt;Εδώ, μπορείτε να ειδοποιηθείτε όταν μια κατάσταση έκτακτης ανάγκης είναι κοντά σας, να δείτε τις τρέχουσες ειδοποιήσεις και στατιστικά στοιχεία σχετικά με προηγούμενες καταστάσεις έκτακτης ανάγκης κοντά σας.&lt;br /&gt;                 Μπορείτε επίσης να προσθέσετε ένα συμβάν έκτακτης ανάγκης όταν συμβαίνει κοντά σας.</string>
+    <string name="ongoing_alerts_intro">. Εδώ μπορείτε να δείτε όλα τα τρέχοντα συμβάντα έκτακτης ανάγκης. &lt;br /&gt;Παρακαλείσθε να ακολουθείτε αυστηρά τις οδηγίες των αρχών, για την ασφάλειά σας.</string>
+    <string name="statistics_intro">. Εδώ μπορείτε να δείτε όλες τις φορές που ειδοποιηθήκατε για έκτακτη ανάγκη, ανά τύπο συμβάντος.</string>
+    <string name="no_alerts">Δεν έχεις ειδοποιήσεις σε αυτή την κατηγορία.</string>
+    <string name="fire_alerts">Ιστορικό Ειδοποιήσεων Πυρκαγιάς.</string>
+    <string name="flood_alerts">Ιστορικό Ειδοποιήσεων Πλημμύρας.</string>
+    <string name="tornado_alerts">Ιστορικό Ειδοποιήσεων Θυελλωδών Ανέμων.</string>
+    <string name="blizzard_alerts">Ιστορικό Ειδοποιήσεων Χιονόπτωσης.</string>
+    <string name="earthquake_alerts">Ιστορικό Ειδοποιήσεων Σεισμού.</string>
+    <string name="heatwave_alerts">Ιστορικό Ειδοποιήσεων Καύσωνα.</string>
+    <string name="thunderstorm_alerts">Ιστορικό Ειδοποιήσεων Καταιγίδας.</string>
+    <string name="all_alerts">Ιστορικό Όλων των Ειδοποιήσεων.</string>
+    <string name="alert_text_intro"><b>Επείγουσα Ειδοποίηση: </b><br>Γενική Γραμματεία Πολιτικής Προστασίας </br><br>Συναγερμός</br></string>
+    <string name="fire_text"><br>Φωτιά πλησιάζει την περιοχή σας. Εκκενώστε αμέσως! Επιλέξτε τον ασφαλέστερο δρόμο και αποφύγετε την οδήγηση κοντά σε φωτιά. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/dasikes-pyrkagies">https://civilprotection.gov.gr/odigies-prostasias/dasikes-pyrkagies</a></br></string>
+    <string name="flood_text"><br>Αναμένονται πλημμύρες στην περιοχή σας. Μετακινηθείτε σε υψηλότερο έδαφος. Μην επιχειρήσετε να ταξιδέψετε εκτός εάν εγκαταλείπετε περιοχή που υπόκειται σε πλημμύρες ή με εντολή εκκένωσης. Ποτέ μην οδηγείτε μέσα από πλημμυρισμένους δρόμους. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/plimmyres">https://civilprotection.gov.gr/odigies-prostasias/plimmyres</a></br></string>
+    <string name="tornado_text"><br>Προειδοποίηση θυελλωδών ανέμων στην περιοχή σας. Βρείτε καταφύγιο άμεσα σε ένα υπόγειο ή ένα εσωτερικό δωμάτιο στον χαμηλότερο όροφο ενός ανθεκτικού κτιρίου. Μην επιχειρήσετε άσκοπες μετακινήσεις. Μετακινηθείτε στο πλησιέστερο καταφύγιο για να προστατευτείτε από τα ιπτάμενα συντρίμμια. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/thyellodeis-anemoi">https://civilprotection.gov.gr/odigies-prostasias/thyellodeis-anemoi</a></br></string>
+    <string name="earthquake_text"><br>Σεισμός στην τοποθεσία σας. Πέστε κάτω στα χέρια και τα γόνατά σας. Βρείτε ένα τραπέζι ή γραφείο για να κρυφτείτε και να κρατηθείτε. Εάν δεν μπορείτε να βρείτε τραπέζι, καλύψτε το πίσω μέρος του λαιμού σας με τα χέρια σας. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/seismoi">https://civilprotection.gov.gr/odigies-prostasias/seismoi</a></br></string>
+    <string name="heatwave_text"><br>Υψηλές θερμοκρασίες αναμένονται στην περιοχή σας. Πίνετε άφθονο νερό και λάβετε μέτρα ψύξης. Ελέγξτε τους γείτονές σας, ειδικά τους ηλικιωμένους και τα παιδιά. Αποφύγετε τη σωματική άσκηση σε εξωτερικούς χώρους. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/kaysonas">https://civilprotection.gov.gr/odigies-prostasias/kaysonas</a></br></string>
+    <string name="thunderstorm_text"><br>Καταιγίδα σε εξέλιξη στην περιοχή σας. Καταστροφικοί άνεμοι. Βρείτε καταφύγιο σε ένα ανθεκτικό κτίριο μακριά από τα παράθυρα. Αποφύγετε τις άσκοπες μετακινήσεις. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/kataigides">https://civilprotection.gov.gr/odigies-prostasias/kataigides</a></br></string>
+    <string name="blizzard_text"><br>Χιονοθύελλα σε εξέλιξη στην περιοχή σας. Λάβετε μέτρα θέρμανσης. Εξασφαλίστε την παροχή νερού. Μην επιχειρήσετε άσκοπες μετακινήσεις. Παραμείνετε σε εγρήγορση και ακολουθήστε τις οδηγίες των Αρχών ανά πάσα στιγμή. Ενημερωθείτε για τις οδηγίες προστατευτικής δράσης: <a href="https://civilprotection.gov.gr/odigies-prostasias/hionoptoseis-pagetos">https://civilprotection.gov.gr/odigies-prostasias/hionoptoseis-pagetos</a></br></string>
+    <string-array name="emergencies_array">
+        <item>Πυρκαγιά</item>
+        <item>Πλημμύρα</item>
+        <item>Σεισμός</item>
+        <item>Καταγίδα</item>
+        <item>Καύσωνας</item>
+        <item>Χιονόπτωση</item>
+        <item>Θυελλώδεις Άνεμοι</item>
+    </string-array>
+    <string-array name="languages_array">
+        <item>Ελληνικά</item>
+        <item>Αγγλικά</item>
+    </string-array>
+</resources>

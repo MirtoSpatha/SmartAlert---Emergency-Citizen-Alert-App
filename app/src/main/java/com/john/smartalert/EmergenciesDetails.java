@@ -41,12 +41,14 @@ public class EmergenciesDetails extends AppCompatActivity {
     DatabaseReference reference;
     StorageReference storageReference;
     LinearLayout incident;
-    String group;
+    String group, language;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emergencies_details);
-
+        language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
+        Authentication.setLocale(EmergenciesDetails.this, language);
+        //recreate();
         ActivityCompat.requestPermissions(EmergenciesDetails.this,new String[]{Manifest.permission.SEND_SMS},100);
 
         database = FirebaseDatabase.getInstance();
@@ -105,7 +107,7 @@ public class EmergenciesDetails extends AppCompatActivity {
         alert.put("category", getIntent().getStringExtra("category"));
         alert.put("group",group);
         reference.push().setValue(alert);
-        Toast.makeText(this,"sms send",Toast.LENGTH_LONG);
+        Toast.makeText(this,getString(R.string.sms_send),Toast.LENGTH_LONG);
         Intent intent = new Intent(EmergenciesDetails.this,EmployeeHomePage.class);
         startActivity(intent);
     }
