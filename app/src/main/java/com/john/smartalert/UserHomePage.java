@@ -80,7 +80,87 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         startActivity(intent);
     }
 
-    public void ongoing_alerts(View view) {
+    public void alerts(View view){
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String, String> alert = new HashMap<>();
+                alert.put("alertKey", snapshot.getKey());
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    for(DataSnapshot d : data.getChildren()){
+                        alert.put(d.getKey().toString(), d.getValue().toString());
+                    }
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+                LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
+                ;
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(date, LocalDateTime.now());
+                if (duration.toHours() < 24) {
+                    String[] temp = alert.get("location").split(",");
+                    double lat = Double.parseDouble(temp[0]);
+                    double lon = Double.parseDouble(temp[1]);
+                    String[] location = userLocation.split(",");
+                    double ulat = Double.parseDouble(location[0]);
+                    double ulon = Double.parseDouble(location[1]);
+                    double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
+                    if (distance <= 10) {
+                        Intent intent = new Intent(UserHomePage.this, Alert.class);
+                        intent.putExtra("fullname", fullname);
+                        intent.putExtra("authId", authId);
+                        intent.putExtra("address", alert.get(" address"));
+                        intent.putExtra("category", alert.get("category"));
+                        intent.putExtra("time", alert.get("time"));
+                        startActivity(intent);
+
+                        reference = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                System.out.println(snapshot.getValue());
+                                if (snapshot.getValue() == null) {
+                                    reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
+                                    reference.child("category").setValue(alert.get("category"));
+                                    reference.child("time").setValue(alert.get("time"));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                    else{
+                        Intent intent = new Intent(UserHomePage.this, Alert.class);
+                        intent.putExtra("fullname", fullname);
+                        intent.putExtra("authId", authId);
+                        intent.putExtra("address", "");
+                        intent.putExtra("category", "");
+                        intent.putExtra("time", "");
+                        startActivity(intent);
+                    }
+                }
+                else{
+                    Intent intent = new Intent(UserHomePage.this, Alert.class);
+                    intent.putExtra("fullname", fullname);
+                    intent.putExtra("authId", authId);
+                    intent.putExtra("address", "");
+                    intent.putExtra("category", "");
+                    intent.putExtra("time", "");
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+            public void ongoing_alerts(View view) {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -104,6 +184,8 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                     double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
                     if (distance <= 10) {
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
+                        intent.putExtra("fullname", fullname);
+                        intent.putExtra("authId", authId);
                         intent.putExtra("address", alert.get(" address"));
                         intent.putExtra("category", alert.get("category"));
                         intent.putExtra("time", alert.get("time"));

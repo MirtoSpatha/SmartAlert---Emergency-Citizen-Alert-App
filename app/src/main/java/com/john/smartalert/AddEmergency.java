@@ -1,6 +1,7 @@
 package com.john.smartalert;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,7 +45,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    String fullname, authid, language, selectedEmergency;
+    String fullname, authid, language, selectedEmergency, file;
     Spinner spinner;
     TextView textView7, textView8;
     EditText comments;
@@ -149,9 +150,33 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
             } catch (ActivityNotFoundException e) {
                 showMessage(getString(R.string.activity_not_found), e.toString());
             }
-
+        Authentication.setLocale(AddEmergency.this, language);
     }
 
+    void uploadImage(){
+        String time = getTime();
+        String filename = authid + "_" + time;
+        storageReference = FirebaseStorage.getInstance().getReference("new_images/"+filename);
+        storageReference.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                savedImage.setImageURI(null);
+                file = storageReference.toString();
+                showMessage("Upload image Success", "");
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        insertData();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                showMessage(getString(R.string.upload_failure_title), getString(R.string.upload_failure_text));
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -165,62 +190,26 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private boolean uploadImage(){
-        final boolean[] result = {false};
-        String time = getTime();
-        String filename = authid + "_" + time;
-        storageReference = FirebaseStorage.getInstance().getReference("new_images/"+filename);
-        storageReference.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                savedImage.setImageURI(null);
-                result[0] = true;
-            }
-
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                showMessage(getString(R.string.upload_failure_title), getString(R.string.upload_failure_text));
-                result[0] = false;
-            }
-        });
-        return result[0];
-    }
-
     private String getTime(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.forLanguageTag(""));
         return formatter.format(new Date());
     }
 
     public void submit(View view){
-        String comm = comments.getText().toString();
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String file = "";
-                if(selectedEmergency != null && !comm.equals("") && UserHomePage.userLocation != null){
+                if(selectedEmergency != null && !comments.getText().toString().equals("") && UserHomePage.userLocation != null){
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
                             if(imageuri != null){
-                                if (!uploadImage())
-                                {
-                                    return;
-                                }
-                                file = storageReference.toString();
+                                uploadImage();
                             }
                             else
                             {
                                 file = "-";
+                                insertData();
                             }
-                            String time = getTime();
-                            String emergency_id = UUID.randomUUID().toString();
-                            reference.child(emergency_id).child("UserId").setValue(authid);
-                            reference.child(emergency_id).child("Category").setValue(selectedEmergency);
-                            reference.child(emergency_id).child("Comments").setValue(comm);
-                            reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
-                            reference.child(emergency_id).child("Time").setValue(time);
-                            reference.child(emergency_id).child("Photo").setValue(file);
-                            Toast.makeText(AddEmergency.this, getString(R.string.emergency_submitted), Toast.LENGTH_SHORT).show();
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
@@ -230,6 +219,9 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                 else{
                     showMessage(getString(R.string.invalid_submission_title), getString(R.string.invalid_submission_text));
                 }
+                //Authentication.setLocale(AddEmergency.this, language);
+                ((Activity) getBaseContext()).finish();
+                Authentication.setLocale(AddEmergency.this, language);
             }
         };
 
@@ -240,5 +232,17 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
 
     void showMessage(String title, String message){
         new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
+    }
+
+    void insertData(){
+        String time = getTime();
+        String emergency_id = UUID.randomUUID().toString();
+        reference.child(emergency_id).child("UserId").setValue(authid);
+        reference.child(emergency_id).child("Category").setValue(selectedEmergency);
+        reference.child(emergency_id).child("Comments").setValue(comments.getText().toString());
+        reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
+        reference.child(emergency_id).child("Time").setValue(time);
+        reference.child(emergency_id).child("Photo").setValue(file);
+        showMessage(getString(R.string.success), getString(R.string.emergency_submitted));
     }
 }

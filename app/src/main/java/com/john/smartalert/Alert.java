@@ -6,6 +6,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
@@ -37,6 +38,9 @@ public class Alert extends AppCompatActivity {
         Address.setText(address);
         Category.setText(category);
         Time.setText(time);
+        if(address.equals("") && category.equals("") && time.equals("")){
+            info.setText(getString(R.string.no_ongoing_alerts));
+        }
         TextToSpeech.OnInitListener  initListener= new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -82,5 +86,8 @@ public class Alert extends AppCompatActivity {
     public void back(View view){
 
         this.finish();
+    }
+    void showMessage(String title, String message){
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
     }
 }

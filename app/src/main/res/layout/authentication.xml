@@ -93,6 +93,7 @@
         android:id="@+id/spinner2"
         android:layout_width="209dp"
         android:layout_height="48dp"
+        android:text="@string/select_language"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

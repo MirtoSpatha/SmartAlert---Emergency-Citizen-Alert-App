@@ -76,6 +76,7 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                                 DatabaseReference reference2 = database.getReference("Users");
                                 reference2.child(user.getUid()).child("UserID").setValue(user.getUid().toString());
                                 reference2.child(user.getUid()).child("Fullname").setValue(fullname.getText().toString());
+                                reference2.child(user.getUid()).child("statistics").setValue(null);
                                 showMessage(getString(R.string.success),getString(R.string.user_profile_created));
                             }else {
                                 showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
@@ -129,7 +130,7 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
         new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
     }
     public static void setLocale(Activity activity, String language){
-        Locale locale = new Locale(language);
+        Locale locale = Locale.forLanguageTag(language);
         Locale.setDefault(locale);
         Resources resources = activity.getResources();
         Configuration config = resources.getConfiguration();
@@ -142,19 +143,22 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(parent.getItemAtPosition(position).toString().equals("English")){
-            setLocale(this, "en");
-            recreate();
+        if(parent.getItemAtPosition(position).toString().equals("English") || parent.getItemAtPosition(position).toString().equals("Αγγλικά")){
+            setLocale(this, "en-US");
+            //finish();
+            //startActivity(getIntent());
         }
-        else if (parent.getItemAtPosition(position).toString().equals("Greek")){
-            setLocale(this, "el");
-            recreate();
+        else if (parent.getItemAtPosition(position).toString().equals("Greek") || parent.getItemAtPosition(position).toString().equals("Ελληνικά")){
+            setLocale(this, "el-GR");
+            //finish();
+            //startActivity(getIntent());
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        setLocale(this, "en");
-        recreate();
+        setLocale(this, "en-US");
+        //();
+        //startActivity(getIntent());
     }
 }
