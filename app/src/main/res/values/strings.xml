@@ -91,6 +91,7 @@
     <string name="select_language">Select Language</string>
     <string name="no_ongoing_alerts">No Alerts</string>
     <string name="no_ongoing_alerts_message">You have no ongoing alerts. You are safe!</string>
+    <string name="attention">Attention! Attention!</string>
     <string-array name="emergencies_array">
         <item>Fire</item>
         <item>Flood</item>

@@ -90,6 +90,7 @@
     <string name="select_language">Διάλεξε Γλώσσα</string>
     <string name="no_ongoing_alerts">Καμία Ειδοποίηση</string>
     <string name="no_ongoing_alerts_message">Δεν έχεις τρέχοντες ειδοποιήσεις έκτακτης ανάγκης. Είσαι ασφαλής!</string>
+    <string name="attention">Προσοχή! Προσοχή!</string>
     <string-array name="emergencies_array">
         <item>Πυρκαγιά</item>
         <item>Πλημμύρα</item>

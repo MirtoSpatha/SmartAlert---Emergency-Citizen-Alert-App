@@ -1,19 +1,26 @@
 package com.john.smartalert;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Statistics extends AppCompatActivity {
@@ -35,6 +42,7 @@ public class Statistics extends AppCompatActivity {
         textView3.setText(getString(R.string.welcome)+fullname+getString(R.string.statistics_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Users").child(authId).child("statistics");
+        ongoing_alerts(null);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snap) {
@@ -176,5 +184,81 @@ public class Statistics extends AppCompatActivity {
 
     void showMessage(String title, String message){
         new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
+    }
+
+    public void ongoing_alerts(View view) {
+
+        DatabaseReference reference1 = database.getReference("Alerts");
+        reference1.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                HashMap<String, String> alert = new HashMap<>();
+                alert.put("alertKey", snapshot.getKey());
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    alert.put(data.getKey().toString(), data.getValue().toString());
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+                LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
+                ;
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(date, LocalDateTime.now());
+                if (duration.toHours() < 24) {
+                    String[] temp = alert.get("location").split(",");
+                    double lat = Double.parseDouble(temp[0]);
+                    double lon = Double.parseDouble(temp[1]);
+                    String[] location = UserHomePage.userLocation.split(",");
+                    double ulat = Double.parseDouble(location[0]);
+                    double ulon = Double.parseDouble(location[1]);
+                    double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
+                    if (distance <= 10) {
+                        Intent intent = new Intent(Statistics.this, Alert.class);
+                        intent.putExtra("fullname", fullname);
+                        intent.putExtra("authId", authId);
+                        intent.putExtra("address", alert.get(" address"));
+                        intent.putExtra("category", alert.get("category"));
+                        intent.putExtra("time", alert.get("time"));
+                        startActivity(intent);
+
+                        reference = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
+                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                System.out.println(snapshot.getValue());
+                                if (snapshot.getValue() == null) {
+                                    reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
+                                    reference.child("category").setValue(alert.get("category"));
+                                    reference.child("time").setValue(alert.get("time"));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
