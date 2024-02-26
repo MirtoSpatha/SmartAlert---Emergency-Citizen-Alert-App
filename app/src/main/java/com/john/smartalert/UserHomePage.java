@@ -39,7 +39,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
     static LocationManager locationManager;
     static String userLocation;
     FirebaseDatabase database;
-    DatabaseReference reference;
+    DatabaseReference reference, reference2;
     SharedPreferences preferences;
 
     @SuppressLint("SetTextI18n")
@@ -68,7 +68,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
-        ongoing_alerts(null);
+        ongoing_alerts();
         textView2 = findViewById(R.id.textView2);
         textView2.setText(getString(R.string.welcome) + fullname + getString(R.string.user_homepage_intro));
     }
@@ -112,24 +112,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         intent.putExtra("category", alert.get("category"));
                         intent.putExtra("time", alert.get("time"));
                         startActivity(intent);
-
-                        reference = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                System.out.println(snapshot.getValue());
-                                if (snapshot.getValue() == null) {
-                                    reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
-                                    reference.child("category").setValue(alert.get("category"));
-                                    reference.child("time").setValue(alert.get("time"));
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
                     }
                     else{
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
@@ -160,8 +142,8 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
 
     }
 
-            public void ongoing_alerts(View view) {
-        reference.addChildEventListener(new ChildEventListener() {
+            public void ongoing_alerts() {
+            reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 HashMap<String, String> alert = new HashMap<>();
@@ -191,8 +173,8 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         intent.putExtra("time", alert.get("time"));
                         startActivity(intent);
 
-                        reference = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        reference2 = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
+                        reference2.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 System.out.println(snapshot.getValue());
@@ -307,5 +289,4 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
     @Override
     public void onProviderEnabled(@NonNull String provider) {
     }
-
 }

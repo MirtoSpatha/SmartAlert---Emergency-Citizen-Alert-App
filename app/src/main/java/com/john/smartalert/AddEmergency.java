@@ -199,29 +199,24 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(selectedEmergency != null && !comments.getText().toString().equals("") && UserHomePage.userLocation != null){
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            if(imageuri != null){
-                                uploadImage();
+                            if(selectedEmergency != null && !comments.getText().toString().equals("") && UserHomePage.userLocation != null) {
+                                if (imageuri != null) {
+                                    uploadImage();
+                                } else {
+                                    file = "-";
+                                    insertData();
+                                }
                             }
-                            else
-                            {
-                                file = "-";
-                                insertData();
+                            else{
+                                showMessage(getString(R.string.invalid_submission_title), getString(R.string.invalid_submission_text));
                             }
                             break;
                         case DialogInterface.BUTTON_NEGATIVE:
                             dialog.dismiss();
                             break;
                     }
-                }
-                else{
-                    showMessage(getString(R.string.invalid_submission_title), getString(R.string.invalid_submission_text));
-                }
-                //Authentication.setLocale(AddEmergency.this, language);
-                ((Activity) getBaseContext()).finish();
-                Authentication.setLocale(AddEmergency.this, language);
             }
         };
 
@@ -243,6 +238,13 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
         reference.child(emergency_id).child("Time").setValue(time);
         reference.child(emergency_id).child("Photo").setValue(file);
-        showMessage(getString(R.string.success), getString(R.string.emergency_submitted));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.success)).setMessage(R.string.emergency_submitted).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ((Activity) getBaseContext()).finish();
+                Authentication.setLocale(AddEmergency.this, language);
+            }
+        }).show();
     }
 }
