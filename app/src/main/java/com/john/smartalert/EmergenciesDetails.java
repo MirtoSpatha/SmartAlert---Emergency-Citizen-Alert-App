@@ -1,6 +1,5 @@
 package com.john.smartalert;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,11 +47,10 @@ public class EmergenciesDetails extends AppCompatActivity {
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(EmergenciesDetails.this, language);
         //recreate();
-        ActivityCompat.requestPermissions(EmergenciesDetails.this,new String[]{Manifest.permission.SEND_SMS},100);
 
         database = FirebaseDatabase.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-         group= getIntent().getStringExtra("group");
+        storageReference = FirebaseStorage.getInstance().getReference("new_images/");
+        group= getIntent().getStringExtra("Group");
         String[] e = group.split(",");
         incident = findViewById(R.id.allincidents);
         for (String s :e){
@@ -99,13 +96,13 @@ public class EmergenciesDetails extends AppCompatActivity {
     public void accept(View view){
         reference = database.getReference("Alerts");
         HashMap<String,String> alert = new HashMap<>();
-        alert.put("location",getIntent().getStringExtra("location"));
-        alert.put(" address", getIntent().getStringExtra("address"));
-        alert.put("startTime", getIntent().getStringExtra("time"));
+        alert.put("Location",getIntent().getStringExtra("Location"));
+        alert.put("Address", getIntent().getStringExtra("Address"));
+        alert.put("StartTime", getIntent().getStringExtra("Time"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.forLanguageTag(""));
-        alert.put("time", formatter.format(new Date()));
-        alert.put("category", getIntent().getStringExtra("category"));
-        alert.put("group",group);
+        alert.put("Time", formatter.format(new Date()));
+        alert.put("Category", getIntent().getStringExtra("Category"));
+        alert.put("Group",group);
         reference.push().setValue(alert);
         Toast.makeText(this,getString(R.string.sms_send),Toast.LENGTH_LONG);
         Intent intent = new Intent(EmergenciesDetails.this,EmployeeHomePage.class);
@@ -114,14 +111,19 @@ public class EmergenciesDetails extends AppCompatActivity {
 //test@civilprotection.gr
     public void decline(View view){
         ArrayList<String> result = getIntent().getStringArrayListExtra("Results");
+        ArrayList<String> address2 = getIntent().getStringArrayListExtra("Address2");
+        int i= 0;
         for (String s: result) {
             if (s.contains(group)){
                 result.remove(s);
+                address2.remove(i);
+                break;
             }
+            i++;
         }
         Intent intent = new Intent(EmergenciesDetails.this, Emergencies.class);
         intent.putStringArrayListExtra("Results",result);
-        intent.putStringArrayListExtra("Address",getIntent().getStringArrayListExtra("Address"));
+        intent.putStringArrayListExtra("Address2",address2);
         startActivity(intent);
     }
 }

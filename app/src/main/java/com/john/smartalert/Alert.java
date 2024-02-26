@@ -1,28 +1,16 @@
 package com.john.smartalert;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class Alert extends AppCompatActivity {
@@ -44,9 +32,9 @@ public class Alert extends AppCompatActivity {
         //recreate();
         textView4 = findViewById(R.id.textView4);
         textView4.setText(getString(R.string.welcome_user)+fullname+getString(R.string.ongoing_alerts_intro));
-        address = getIntent().getStringExtra("address");
-        category = getIntent().getStringExtra("category");
-        time = getIntent().getStringExtra("time");
+        address = getIntent().getStringExtra("Address");
+        category = getIntent().getStringExtra("Category");
+        time = getIntent().getStringExtra("Time");
         Address = findViewById(R.id.Region);
         Category = findViewById(R.id.Category);
         Time = findViewById(R.id.Time);
