@@ -52,7 +52,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         authId = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(UserHomePage.this, language);
-        //recreate();
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Alerts");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -95,12 +94,12 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 }
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-                LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
+                LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
                 ;
                 LocalDateTime now = LocalDateTime.now();
                 Duration duration = Duration.between(date, LocalDateTime.now());
                 if (duration.toHours() < 24) {
-                    String[] temp = alert.get("location").split(",");
+                    String[] temp = alert.get("Location").split(",");
                     double lat = Double.parseDouble(temp[0]);
                     double lon = Double.parseDouble(temp[1]);
                     String[] location = userLocation.split(",");
@@ -111,18 +110,18 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
                         intent.putExtra("fullname", fullname);
                         intent.putExtra("authId", authId);
-                        intent.putExtra("address", alert.get(" address"));
-                        intent.putExtra("category", alert.get("category"));
-                        intent.putExtra("time", alert.get("time"));
+                        intent.putExtra("Address", alert.get("Address"));
+                        intent.putExtra("Category", alert.get("Category"));
+                        intent.putExtra("Time", alert.get("Time"));
                         startActivity(intent);
                     }
                     else{
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
                         intent.putExtra("fullname", fullname);
                         intent.putExtra("authId", authId);
-                        intent.putExtra("address", "");
-                        intent.putExtra("category", "");
-                        intent.putExtra("time", "");
+                        intent.putExtra("Address", "");
+                        intent.putExtra("Category", "");
+                        intent.putExtra("Time", "");
                         startActivity(intent);
                     }
                 }
@@ -130,9 +129,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                     Intent intent = new Intent(UserHomePage.this, Alert.class);
                     intent.putExtra("fullname", fullname);
                     intent.putExtra("authId", authId);
-                    intent.putExtra("address", "");
-                    intent.putExtra("category", "");
-                    intent.putExtra("time", "");
+                    intent.putExtra("Address", "");
+                    intent.putExtra("Category", "");
+                    intent.putExtra("Time", "");
                     startActivity(intent);
                 }
             }
@@ -145,22 +144,23 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
 
     }
 
-            public void ongoing_alerts() {
-            reference.addChildEventListener(new ChildEventListener() {
+    public void ongoing_alerts() {
+        reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 HashMap<String, String> alert = new HashMap<>();
                 alert.put("alertKey", snapshot.getKey());
                 for (DataSnapshot data : snapshot.getChildren()) {
                     alert.put(data.getKey().toString(), data.getValue().toString());
+                    System.out.println(data.getKey()+"  "+data.getValue());
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-                LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
+                LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
                 ;
                 LocalDateTime now = LocalDateTime.now();
                 Duration duration = Duration.between(date, LocalDateTime.now());
                 if (duration.toHours() < 24) {
-                    String[] temp = alert.get("location").split(",");
+                    String[] temp = alert.get("Location").split(",");
                     double lat = Double.parseDouble(temp[0]);
                     double lon = Double.parseDouble(temp[1]);
                     String[] location = userLocation.split(",");
@@ -171,9 +171,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
                         intent.putExtra("fullname", fullname);
                         intent.putExtra("authId", authId);
-                        intent.putExtra("address", alert.get(" address"));
-                        intent.putExtra("category", alert.get("category"));
-                        intent.putExtra("time", alert.get("time"));
+                        intent.putExtra("Address", alert.get("Address"));
+                        intent.putExtra("Category", alert.get("Category"));
+                        intent.putExtra("Time", alert.get("Time"));
                         startActivity(intent);
 
                         reference2 = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
@@ -182,9 +182,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 System.out.println(snapshot.getValue());
                                 if (snapshot.getValue() == null) {
-                                    reference.child("address").setValue(alert.get(" address"));//edo bazo tin odo kai oxi to location
-                                    reference.child("category").setValue(alert.get("category"));
-                                    reference.child("time").setValue(alert.get("time"));
+                                    reference2.child("Address").setValue(alert.get("Address"));
+                                    reference2.child("Category").setValue(alert.get("Category"));
+                                    reference2.child("Time").setValue(alert.get("Time"));
                                 }
                             }
 

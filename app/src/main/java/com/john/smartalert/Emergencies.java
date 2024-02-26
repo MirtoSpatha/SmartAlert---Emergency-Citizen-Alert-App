@@ -63,19 +63,17 @@ public class Emergencies extends AppCompatActivity {
             Button b = view.findViewById(R.id.inspect);
             b.setTag(s);
             TextView category = view.findViewById(R.id.category);
-            category.setText(stringStringHashMap.get("category"));
+            category.setText(stringStringHashMap.get("Category"));
             TextView a = view.findViewById(R.id.address);
             a.setText(address.get(Integer.parseInt(s)));
             TextView location = view.findViewById(R.id.location);
-            location.setText(stringStringHashMap.get("center"));
+            location.setText(stringStringHashMap.get("Center"));
             TextView time = view.findViewById(R.id.time);
-            time.setText(stringStringHashMap.get("time"));
+            time.setText(stringStringHashMap.get("Time"));
             TextView reports = view.findViewById(R.id.reports);
-            reports.setText(stringStringHashMap.get("reports"));
+            reports.setText(stringStringHashMap.get("Reports"));
             groups.addView(view);
         });
-
-
 //        System.out.println(emergencies);
     }
 
@@ -84,39 +82,14 @@ public class Emergencies extends AppCompatActivity {
         HashMap<String,String> group = emergencies.get(tag);
         System.out.println(group);
         Intent intent = new Intent(this,EmergenciesDetails.class);
-        intent.putExtra("group",group.get("group"));
-        intent.putExtra("location",group.get("center"));
-        intent.putExtra("address",address.get(Integer.parseInt(tag)));
-        intent.putExtra("time",group.get("time"));
-        intent.putExtra("category",group.get("category"));
+        intent.putExtra("Group",group.get("Group"));
+        intent.putExtra("Location",group.get("Center"));
+        intent.putExtra("Address",address.get(Integer.parseInt(tag)));
+        intent.putExtra("Time",group.get("Time"));
+        intent.putExtra("Category",group.get("Category"));
         intent.putExtra("Results",getIntent().getStringArrayListExtra("Results"));
-        intent.putExtra("Address",getIntent().getStringArrayListExtra("Address"));
+        intent.putExtra("Address2",getIntent().getStringArrayListExtra("Address"));
         startActivity(intent);
     }
-
-    /*private void locationToAddress(String loc){
-        String[] l = loc.split(",");
-        StringBuilder url = new StringBuilder();
-        url.append("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=").append(l[1]).append("&lon=").append(l[0]);
-        JSONObject body = new JSONObject();
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.GET,
-                url.toString(), body, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    System.out.println(response.getString("display_name"));
-                    temp.add(response.getString("display_name"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.getLocalizedMessage();
-            }
-        });
-        requestQueue.add(postRequest);
-    }*/
 //test@civilprotection.gr
 }

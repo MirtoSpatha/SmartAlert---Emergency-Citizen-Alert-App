@@ -180,7 +180,7 @@ public class EmployeeHomePage extends AppCompatActivity {
                             }).start();
                         }
                         System.out.println(response);
-                        updateAlerts(response.getString("updateAlerts"));
+                        //updateAlerts(response.getString("updateAlerts"));
                         //updateEmergencies(response.getString("oldEmergencies"));
                     }
                 } catch (JSONException e) {
@@ -199,7 +199,7 @@ public class EmployeeHomePage extends AppCompatActivity {
         String[] alerts = s.split("\\|");
         for (String t:alerts) {
             String[] key = t.split("=");
-            reference2 = database.getReference("Alerts/"+key[0]+"/group");
+            reference2 = database.getReference("Alerts/"+key[0]+"/Group");
             reference2.setValue(key[1]);
         }
     }
