@@ -29,12 +29,16 @@ public class AppController {
         List<String> oldEmergencies = UpdateList.removeOldEmergencies(emergencies.getNewEmerg());
         oldEmergencies.forEach(s -> emergencies.getNewEmerg().remove(s));
         emergencies.getAlerts().forEach((s, stringStringHashMap) -> {
-            String group = stringStringHashMap.get("group");
+            String group = stringStringHashMap.get("Group");
             String[] strings = group.split(",");
             for (String s1 : strings){
                 emergencies.getNewEmerg().remove(s1);
             }
         });
+        System.out.println(emergencies.getNewEmerg());
+        if (emergencies.getNewEmerg().isEmpty()){
+            return new HashMap<>();
+        }
         //check if any new emergence can grouped with the already alerts and remove from the new emergence
         UpdateList.updateAlerts(emergencies.getNewEmerg(),emergencies.getAlerts()).forEach(s -> emergencies.getNewEmerg().remove(s));
 
@@ -55,21 +59,21 @@ public class AppController {
             for (List<String> g : sortedEmergencies) {
                 StringBuilder builder = new StringBuilder();
                 //add some information for the group
-                builder.append("group=");
+                builder.append("Group=");
                 for (int i = 0; i < g.size() - 4; i++) {
                     builder.append(g.get(i)).append(",");
                 }
-                builder.append("|").append("center=").append(g.get(g.size() - 4)).append(",").append(g.get(g.size() - 3)).append("|")
-                        .append("time=").append(g.get(g.size() - 2)).append("|")
-                        .append("reports=").append(g.size() - 4).append("|")
-                        .append("category=").append(emergencies.getNewEmerg().get(sortedEmergencies.get(j).get(0)).get("Category"));
+                builder.append("|").append("Center=").append(g.get(g.size() - 4)).append(",").append(g.get(g.size() - 3)).append("|")
+                        .append("Time=").append(g.get(g.size() - 2)).append("|")
+                        .append("Reports=").append(g.size() - 4).append("|")
+                        .append("Category=").append(emergencies.getNewEmerg().get(sortedEmergencies.get(j).get(0)).get("Category"));
                 results.put(String.valueOf(j), builder.toString());
                 j++;
             }
         }
         //add the updated groups for the alerts
         StringBuilder updateAlerts = new StringBuilder();
-        emergencies.getAlerts().forEach((s, a) -> updateAlerts.append(s).append("=").append(a.get("group")).append("|"));
+        emergencies.getAlerts().forEach((s, a) -> updateAlerts.append(s).append("=").append(a.get("Group")).append("|"));
         results.put("updateAlerts",updateAlerts.toString());
         //add the incidents that is more than 24 hours and have to move to the AllEmergencies (in the FireBase)
         StringBuilder old = new StringBuilder();
