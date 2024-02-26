@@ -53,7 +53,7 @@ public class EmergenciesDetails extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-         group= getIntent().getStringExtra("group");
+        group= getIntent().getStringExtra("group");
         String[] e = group.split(",");
         incident = findViewById(R.id.allincidents);
         for (String s :e){

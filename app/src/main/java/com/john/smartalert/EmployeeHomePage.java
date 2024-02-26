@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import java.util.Locale;
 
 public class EmployeeHomePage extends AppCompatActivity {
     String fullname,authId,language;
+    TextView textView24;
     FirebaseDatabase database;
     DatabaseReference reference;
     DatabaseReference reference2;
@@ -52,6 +54,8 @@ public class EmployeeHomePage extends AppCompatActivity {
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(EmployeeHomePage.this, language);
         //recreate();
+        textView24 = findViewById(R.id.textView24);
+        textView24.setText(getString(R.string.welcome)+fullname+getString(R.string.employee_homepage_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
 //        newEmergencies = new HashMap<>();

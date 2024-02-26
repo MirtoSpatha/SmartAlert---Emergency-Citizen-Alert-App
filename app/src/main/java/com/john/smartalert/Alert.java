@@ -1,29 +1,25 @@
 package com.john.smartalert;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class Alert extends AppCompatActivity {
 
@@ -31,6 +27,7 @@ public class Alert extends AppCompatActivity {
     String fullname, authId, language, address,category,time;
     FirebaseDatabase database;
     DatabaseReference reference;
+    LinearLayout allalerts;
     private TextToSpeech tts;
     @SuppressLint("SetTextI18n")
     @Override
@@ -43,17 +40,7 @@ public class Alert extends AppCompatActivity {
         Authentication.setLocale(Alert.this, language);
         //recreate();
         textView4 = findViewById(R.id.textView4);
-        textView4.setText(getString(R.string.welcome_user)+fullname+getString(R.string.ongoing_alerts_intro));
-        address = getIntent().getStringExtra("address");
-        category = getIntent().getStringExtra("category");
-        time = getIntent().getStringExtra("time");
-        Address = findViewById(R.id.Region);
-        Category = findViewById(R.id.Category);
-        Time = findViewById(R.id.Time);
-        info = findViewById(R.id.AlertInfo);
-        Address.setText(address);
-        Category.setText(category);
-        Time.setText(time);
+        textView4.setText(getString(R.string.hello_user)+fullname+getString(R.string.ongoing_alerts_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Alerts");
         if(address.equals("") && category.equals("") && time.equals("")){
@@ -68,38 +55,86 @@ public class Alert extends AppCompatActivity {
             }
         };
         tts = new TextToSpeech(this,initListener);
-        switch (category){
-            case ("Fire"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.fire_text));
-                break;
-            }
-            case ("Flood"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.flood_text));
-                break;
-            }
-            case ("Earthquake"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.earthquake_text));
-                break;
-            }
-            case ("Thunderstorm"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.thunderstorm_text));
-                break;
-            }
-            case ("Heatwave"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.heatwave_text));
-                break;
-            }
-            case ("Tornado"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.tornado_text));
-                break;
-            }
-            case ("Blizzard"):{
-                info.setText(getString(R.string.alert_text_intro) + getString(R.string.blizzard_text));
-                break;
-            }
+        allalerts = findViewById(R.id.allalerts);
+        HashMap<String, HashMap<String,String>> alerts = new HashMap<>();
+        int i=0;
+        /*
+        for (String s:) {
+            String[] categories =s.split("\\|");
+//            System.out.println(categories[0]);
+            HashMap<String,String> map = new HashMap<>();
+            String[] group = categories[0].split("=");
+            map.put(group[0],group[1]);
+            String[] loc = categories[1].split("=");
+            map.put(loc[0],loc[1]);
+            String[] time = categories[2].split("=");
+            map.put(time[0],time[1]);
+            String[] reports = categories[3].split("=");
+            map.put(reports[0],reports[1]);
+            String[] c = categories[4].split("=");
+            map.put(c[0],c[1]);
+            alerts.put(String.valueOf(i),map);
+            i++;
         }
-        tts.speak(getString(R.string.attention),TextToSpeech.QUEUE_ADD,null,null);
-        tts.speak(info.getText(),TextToSpeech.QUEUE_ADD,null,null);
+         */
+        alerts.forEach((s, stringStringHashMap) -> {
+            View view = LayoutInflater.from(this).inflate(R.layout.alert_item, null);
+            address = getIntent().getStringExtra("address");
+            category = getIntent().getStringExtra("category");
+            time = getIntent().getStringExtra("time");
+            Address = view.findViewById(R.id.region);
+            Category = view.findViewById(R.id.category2);
+            Time = view.findViewById(R.id.time2);
+            info = view.findViewById(R.id.alertInfo);
+            Address.setText(address);
+            Category.setText(category);
+            Time.setText(time);
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Map<String, String> data = (Map<String, String>) snapshot.getValue();
+                    System.out.println(data.get("Comments"));
+                    switch (category) {
+                        case ("Fire"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.fire_text));
+                            break;
+                        }
+                        case ("Flood"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.flood_text));
+                            break;
+                        }
+                        case ("Earthquake"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.earthquake_text));
+                            break;
+                        }
+                        case ("Thunderstorm"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.thunderstorm_text));
+                            break;
+                        }
+                        case ("Heatwave"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.heatwave_text));
+                            break;
+                        }
+                        case ("Tornado"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.tornado_text));
+                            break;
+                        }
+                        case ("Blizzard"): {
+                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.blizzard_text));
+                            break;
+                        }
+                    }
+                    tts.speak(getString(R.string.attention), TextToSpeech.QUEUE_ADD, null, null);
+                    tts.speak(info.getText(), TextToSpeech.QUEUE_ADD, null, null);
+                    allalerts.addView(view);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
     }
 
     public void back(View view){

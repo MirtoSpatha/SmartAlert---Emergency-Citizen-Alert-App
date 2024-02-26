@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserHomePage extends AppCompatActivity implements LocationListener {
@@ -86,11 +87,13 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, String> alert = new HashMap<>();
                 alert.put("alertKey", snapshot.getKey());
+                ArrayList<String> all_alerts = new ArrayList<>();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    for(DataSnapshot d : data.getChildren()){
-                        alert.put(d.getKey().toString(), d.getValue().toString());
-                    }
+                    System.out.println(data);
+                    alert.put(data.getKey().toString(), data.getValue().toString());
+                    all_alerts.add(data.child("Address").getValue().toString()+"|"+data.child("Category").getValue().toString()+"|"+data.child("Time").getValue().toString()+" ,");
                 }
+
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                 LocalDateTime date = LocalDateTime.parse(alert.get("time"), formatter);
                 ;

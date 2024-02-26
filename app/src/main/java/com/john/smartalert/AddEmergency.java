@@ -124,7 +124,33 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedEmergency = parent.getItemAtPosition(position).toString();
+        String category = parent.getItemAtPosition(position).toString();
+        switch(category){
+            case ("Πυρκαγιά"):
+                selectedEmergency = "Fire";
+                break;
+            case ("Πλημμύρα"):
+                selectedEmergency = "Flood";
+                break;
+            case ("Καύσωνας"):
+                selectedEmergency = "Heatwave";
+                break;
+            case ("Καταιγίδα"):
+                selectedEmergency = "Thunderstorm";
+                break;
+            case ("Σεισμός"):
+                selectedEmergency = "Earthquake";
+                break;
+            case ("Θυελλώδεις Άνεμοι"):
+                selectedEmergency = "Tornado";
+                break;
+            case ("Χιονόπτωση"):
+                selectedEmergency = "Blizzard";
+                break;
+            default:
+                selectedEmergency = parent.getItemAtPosition(position).toString();
+                break;
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {

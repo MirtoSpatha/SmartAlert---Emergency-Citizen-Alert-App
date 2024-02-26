@@ -42,76 +42,82 @@ public class Statistics extends AppCompatActivity {
         textView3.setText(getString(R.string.welcome)+fullname+getString(R.string.statistics_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Users").child(authId).child("statistics");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snap) {
                 if (snap.getValue()!=null){
                         for(DataSnapshot emergencies : snap.getChildren()){
+                            String category = emergencies.child("Category").getValue().toString();
+                            String address = emergencies.child("Address").getValue().toString();
+                            String time = emergencies.child("Time").getValue().toString();
+                            String stats = Objects.requireNonNull(address).concat(Objects.requireNonNull(time));
                             if(allStatistics== null){
                                 allStatistics = Objects.requireNonNull(emergencies.getValue()).toString();
                             }
                             else {
                                 allStatistics = allStatistics.concat(Objects.requireNonNull(emergencies.getValue()).toString());
                             }
-                            switch (Objects.requireNonNull(emergencies.child("category").getValue()).toString()){
+                            switch (Objects.requireNonNull(category)){
                                 case ("Fire"):{
                                     if(fireStatistics== null){
-                                        fireStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        fireStatistics = stats;
                                     }
                                     else {
-                                        fireStatistics = fireStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
+                                        fireStatistics = fireStatistics.concat(stats);
                                     }
                                     break;
                                 }
                                 case ("Flood"):{
                                     if(floodStatistics== null){
-                                        floodStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        floodStatistics = stats;
                                     }
                                     else {
-                                        floodStatistics = floodStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
-                                    }                                    break;
+                                        floodStatistics = floodStatistics.concat(stats);
+                                    }
+                                    break;
                                 }
                                 case ("Earthquake"):{
                                     if(earthquakeStatistics== null){
-                                        earthquakeStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        earthquakeStatistics = stats;
                                     }
                                     else {
-                                        earthquakeStatistics = earthquakeStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
-                                    }                                    break;
+                                        earthquakeStatistics = earthquakeStatistics.concat(stats);
+                                    }
+                                    break;
                                 }
                                 case ("Thunderstorm"):{
                                     if(thunderstormStatistics== null){
-                                        thunderstormStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        thunderstormStatistics = stats;
                                     }
                                     else {
-                                        thunderstormStatistics = thunderstormStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
+                                        thunderstormStatistics = thunderstormStatistics.concat(stats);
                                     }
                                     break;
                                 }
                                 case ("Heatwave"):{
                                     if(heatwaveStatistics== null){
-                                        heatwaveStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        heatwaveStatistics = stats;
                                     }
                                     else {
-                                        heatwaveStatistics = heatwaveStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
+                                        heatwaveStatistics = heatwaveStatistics.concat(stats);
                                     }
                                     break;
                                 }
                                 case ("Tornado"):{
                                     if(tornadoStatistics== null){
-                                        tornadoStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        tornadoStatistics = stats;
                                     }
                                     else {
-                                        tornadoStatistics = tornadoStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
+                                        tornadoStatistics = tornadoStatistics.concat(stats);
                                     }
                                     break;
                                 }
                                 case ("Blizzard"):{
                                     if(blizzardStatistics== null){
-                                        blizzardStatistics = Objects.requireNonNull(emergencies.child("address").getValue()).toString().concat(emergencies.child("time").getValue().toString());
+                                        blizzardStatistics = stats;
                                     }
                                     else {
-                                        blizzardStatistics = blizzardStatistics.concat(Objects.requireNonNull(emergencies.child("address").getValue()).toString()).concat(emergencies.child("time").getValue().toString());
+                                        blizzardStatistics = blizzardStatistics.concat(stats);
                                     }
                                     break;
                                 }
