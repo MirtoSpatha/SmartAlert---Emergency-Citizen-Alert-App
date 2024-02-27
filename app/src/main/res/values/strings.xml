@@ -69,9 +69,9 @@
     <string name="provide_all_info">"Please provide all info\!"</string>
     <string name="successful_sign_in">User signed in successfully\!</string>
     <string name="sms_send">sms send</string>
-    <string name="user_homepage_intro">. <br/> This is an Emergency Alert App. <br/>Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies. <br/> You can also add an emergency event when it happens close to you.</string>
-    <string name="employee_homepage_intro">. <br/> This is an Emergency Alert App. <br/>Here you can inspect all the reported incidents from citizens and mark an incident as an emergency or not.</string>
-    <string name="ongoing_alerts_intro">. Here you can see all the ongoing emergency events. <br/>Please, strictly follow the instructions of authorities, for your safety.</string>
+    <string name="user_homepage_intro">. <br /> This is an Emergency Alert App. <br />Here, you can get notified when an emergency is near you, view the ongoing alerts and statistics about previous emergencies. <br /> You can also add an emergency event when it happens close to you.</string>
+    <string name="employee_homepage_intro">. <br /> This is an Emergency Alert App. <br />Here you can inspect all the reported incidents from citizens and mark an incident as an emergency or not.</string>
+    <string name="ongoing_alerts_intro">. Here you can see all the ongoing emergency events. <br />Please, strictly follow the instructions of authorities, for your safety.</string>
     <string name="statistics_intro">. Here you can see all the times you were notified for an emergency, by type of incident.</string>
     <string name="no_alerts">You have no alerts for this category.</string>
     <string name="fire_alerts">History of your Fire Alerts</string>

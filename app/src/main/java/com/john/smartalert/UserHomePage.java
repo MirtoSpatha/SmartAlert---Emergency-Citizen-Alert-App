@@ -155,7 +155,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 alert.put("alertKey", snapshot.getKey());
                 for (DataSnapshot data : snapshot.getChildren()) {
                     alert.put(data.getKey().toString(), data.getValue().toString());
-                    System.out.println(data.getKey()+"  "+data.getValue());
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                 LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
@@ -169,14 +168,21 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                     double ulon = Double.parseDouble(location[1]);
                     double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
                     if (distance <= 10) {
+                        ArrayList<String> address = new ArrayList<>();
+                        address.add(alert.get("Address"));
+                        ArrayList<String> category = new ArrayList<>();
+                        category.add(alert.get("Category"));
+                        ArrayList<String> time = new ArrayList<>();
+                        time.add(alert.get("Time"));
+
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
                         intent.putExtra("fullname", fullname);
                         intent.putExtra("authId", authId);
-                        intent.putExtra("AddressList", new ArrayList<>().add(alert.get("Address")));
-                        intent.putExtra("CategoryList", new ArrayList<>().add(alert.get("Category")));
-                        intent.putExtra("TimeList", new ArrayList<>().add(alert.get("Time")));
+                        intent.putStringArrayListExtra("AddressList",address );
+                        intent.putStringArrayListExtra("CategoryList", category);
+                        intent.putStringArrayListExtra("TimeList", time);
                         startActivity(intent);
-
+//t@gmail.com
                         reference2 = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));
                         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

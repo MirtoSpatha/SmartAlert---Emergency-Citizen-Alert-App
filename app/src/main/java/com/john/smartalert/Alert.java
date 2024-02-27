@@ -8,20 +8,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class Alert extends AppCompatActivity {
 
@@ -50,6 +44,9 @@ public class Alert extends AppCompatActivity {
         address = getIntent().getStringArrayListExtra("AddressList");
         category = getIntent().getStringArrayListExtra("CategoryList");
         time = getIntent().getStringArrayListExtra("TimeList");
+        System.out.println(address);
+        System.out.println(category);
+        System.out.println(time);
         allalerts = findViewById(R.id.allalerts);
         if(address.isEmpty() && category.isEmpty() && time.isEmpty()){
             textView4.setText(getString(R.string.no_alerts));
@@ -63,6 +60,7 @@ public class Alert extends AppCompatActivity {
                 this.finish();
             }
         }
+        System.out.println(count);
         TextToSpeech.OnInitListener  initListener= new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {

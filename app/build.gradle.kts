@@ -30,6 +30,19 @@ android {
 }
 
 dependencies {
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation ("androidx.camera:camera-core:1.4.0-alpha04")
+    implementation("androidx.camera:camera-camera2:1.4.0-alpha04")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation ("androidx.camera:camera-lifecycle:1.4.0-alpha04")
+    // If you want to additionally use the CameraX VideoCapture library
+    implementation ("androidx.camera:camera-video:1.4.0-alpha04")
+    // If you want to additionally use the CameraX View class
+    implementation ("androidx.camera:camera-view:1.4.0-alpha04")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation ("androidx.camera:camera-mlkit-vision:1.4.0-alpha04")
+    // If you want to additionally use the CameraX Extensions library
+    implementation ("androidx.camera:camera-extensions:1.4.0-alpha04")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")

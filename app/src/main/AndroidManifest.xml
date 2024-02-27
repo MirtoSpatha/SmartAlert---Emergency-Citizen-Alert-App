@@ -28,6 +28,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Camera"
+            android:exported="false" />
+        <activity
             android:name=".Alert"
             android:exported="false" />
         <activity

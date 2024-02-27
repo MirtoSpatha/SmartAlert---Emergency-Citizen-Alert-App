@@ -2,14 +2,14 @@ package com.john.smartalert;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.Matrix;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -38,23 +38,24 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
 public class AddEmergency extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    String fullname, authid, language, selectedEmergency, file;
+    String fullname, authid, language, selectedEmergency, file, filename;
     Spinner spinner;
     TextView textView7, textView8;
     EditText comments;
-    Uri imageuri;
     ImageView savedImage;
     StorageReference storageReference;
     FirebaseDatabase database;
     DatabaseReference reference;
     ActivityResultLauncher<String> cameraPermission;
     ActivityResultLauncher<String> storagePermission;
+    byte[] byteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         authid = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(AddEmergency.this, language);
+        file = "";
         //recreate();
         textView7 = findViewById(R.id.textView7);
         textView8 = findViewById(R.id.textView8);
@@ -158,7 +160,10 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
 
 
     public void photo(View view){
-        if (ContextCompat.checkSelfPermission(this,
+       Intent intent = new Intent(AddEmergency.this, Camera.class);
+       intent.putExtra("authId",authid);
+        startActivityForResult(intent,1);
+        /* if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             cameraPermission.launch(android.Manifest.permission.CAMERA);
         }
@@ -174,26 +179,18 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             } catch (ActivityNotFoundException e) {
                 showMessage(getString(R.string.activity_not_found), e.toString());
-            }
+            }*/
         Authentication.setLocale(AddEmergency.this, language);
     }
 
     void uploadImage(){
-        String time = getTime();
-        String filename = authid + "_" + time;
         storageReference = FirebaseStorage.getInstance().getReference("new_images/"+filename);
-        storageReference.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        storageReference.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 savedImage.setImageURI(null);
-                file = storageReference.toString();
                 showMessage("Upload image Success", "");
-                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        insertData();
-                    }
-                });
+                insertData();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -207,11 +204,24 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK){
-            imageuri = data.getData();
-            //savedImage.getLayoutParams().width = 120;
-            //savedImage.getLayoutParams().height = 220;
-            //savedImage.setAdjustViewBounds(true);
-            savedImage.setImageURI(imageuri);
+            byteArray = data.getByteArrayExtra("image");
+            Bitmap bmp= BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            file = "upload";
+            filename = data.getStringExtra("filename");
+            System.out.println(filename);
+            try {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true); // rotating bitmap
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byteArray = baos.toByteArray();
+            }
+            catch (Exception e) {
+
+            }
+            savedImage.setImageBitmap(bmp);
+
         }
     }
 
@@ -226,11 +236,15 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
+                            System.out.println(comments.getText().toString());
+                            System.out.println(selectedEmergency);
+                            System.out.println(UserHomePage.userLocation);
                             if(selectedEmergency != null && !comments.getText().toString().equals("") && UserHomePage.userLocation != null) {
-                                if (imageuri != null) {
+                                if (file.equals("upload")) {
                                     uploadImage();
+                                    file = "";
                                 } else {
-                                    file = "-";
+                                    filename = "-";
                                     insertData();
                                 }
                             }
@@ -262,7 +276,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         reference.child(emergency_id).child("Comments").setValue(comments.getText().toString());
         reference.child(emergency_id).child("Location").setValue(UserHomePage.userLocation);
         reference.child(emergency_id).child("Time").setValue(time);
-        reference.child(emergency_id).child("Photo").setValue(file);
+        reference.child(emergency_id).child("Photo").setValue(filename);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.success)).setMessage(R.string.emergency_submitted).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
