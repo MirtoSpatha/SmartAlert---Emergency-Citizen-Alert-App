@@ -50,15 +50,17 @@ public class Alert extends AppCompatActivity {
         address = getIntent().getStringArrayListExtra("AddressList");
         category = getIntent().getStringArrayListExtra("CategoryList");
         time = getIntent().getStringArrayListExtra("TimeList");
-        if(address.size() == category.size() && address.size() == time.size()){
-            count = address.size();
-        }
-        else{
-            showMessage(getString(R.string.error),getString(R.string.database_error));
-            this.finish();
-        }
         if(address.isEmpty() && category.isEmpty() && time.isEmpty()){
             info.setText(getString(R.string.no_ongoing_alerts));
+        }
+        else{
+            if(address.size() == category.size() && address.size() == time.size()){
+                count = address.size();
+            }
+            else{
+                showMessage(getString(R.string.error),getString(R.string.database_error));
+                this.finish();
+            }
         }
         TextToSpeech.OnInitListener  initListener= new TextToSpeech.OnInitListener() {
             @Override
