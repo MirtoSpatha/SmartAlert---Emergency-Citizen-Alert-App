@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class Alert extends AppCompatActivity {
 
-    TextView textView4, Address, Category, Time,info;
+    TextView textView4, textView5, Address, Category, Time,info;
     String fullname, authId, language;
     Integer count;
     ArrayList<String> address,category,time;
@@ -50,8 +50,9 @@ public class Alert extends AppCompatActivity {
         address = getIntent().getStringArrayListExtra("AddressList");
         category = getIntent().getStringArrayListExtra("CategoryList");
         time = getIntent().getStringArrayListExtra("TimeList");
+        allalerts = findViewById(R.id.allalerts);
         if(address.isEmpty() && category.isEmpty() && time.isEmpty()){
-            info.setText(getString(R.string.no_ongoing_alerts));
+            textView4.setText(getString(R.string.no_alerts));
         }
         else{
             if(address.size() == category.size() && address.size() == time.size()){
@@ -71,26 +72,6 @@ public class Alert extends AppCompatActivity {
             }
         };
         tts = new TextToSpeech(this,initListener);
-        allalerts = findViewById(R.id.allalerts);
-        /*
-        for (String s:) {
-            String[] categories =s.split("\\|");
-//            System.out.println(categories[0]);
-            HashMap<String,String> map = new HashMap<>();
-            String[] group = categories[0].split("=");
-            map.put(group[0],group[1]);
-            String[] loc = categories[1].split("=");
-            map.put(loc[0],loc[1]);
-            String[] time = categories[2].split("=");
-            map.put(time[0],time[1]);
-            String[] reports = categories[3].split("=");
-            map.put(reports[0],reports[1]);
-            String[] c = categories[4].split("=");
-            map.put(c[0],c[1]);
-            alerts.put(String.valueOf(i),map);
-            i++;
-        }
-         */
         for(int i=0;i<count;i++){
             View view = LayoutInflater.from(this).inflate(R.layout.alert_item, null);
             Address = view.findViewById(R.id.region);
@@ -100,57 +81,43 @@ public class Alert extends AppCompatActivity {
             Address.setText(address.get(i));
             Category.setText(category.get(i));
             Time.setText(time.get(i));
-            int finalI = i;
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Map<String, String> data = (Map<String, String>) snapshot.getValue();
-                    System.out.println(data.get("Comments"));
-                    switch (category.get(finalI)) {
-                        case ("Fire"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.fire_text));
-                            break;
-                        }
-                        case ("Flood"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.flood_text));
-                            break;
-                        }
-                        case ("Earthquake"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.earthquake_text));
-                            break;
-                        }
-                        case ("Thunderstorm"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.thunderstorm_text));
-                            break;
-                        }
-                        case ("Heatwave"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.heatwave_text));
-                            break;
-                        }
-                        case ("Tornado"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.tornado_text));
-                            break;
-                        }
-                        case ("Blizzard"): {
-                            info.setText(getString(R.string.alert_text_intro) + getString(R.string.blizzard_text));
-                            break;
-                        }
-                    }
-                    tts.speak(getString(R.string.attention), TextToSpeech.QUEUE_ADD, null, null);
-                    tts.speak(info.getText(), TextToSpeech.QUEUE_ADD, null, null);
-                    allalerts.addView(view);
+            switch (category.get(i)) {
+                case ("Fire"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.fire_text));
+                    break;
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
+                case ("Flood"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.flood_text));
+                    break;
                 }
-            });
+                case ("Earthquake"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.earthquake_text));
+                    break;
+                }
+                case ("Thunderstorm"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.thunderstorm_text));
+                    break;
+                }
+                case ("Heatwave"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.heatwave_text));
+                    break;
+                }
+                case ("Tornado"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.tornado_text));
+                    break;
+                }
+                case ("Blizzard"): {
+                    info.setText(getString(R.string.alert_text_intro) + getString(R.string.blizzard_text));
+                    break;
+                }
+            }
+            tts.speak(getString(R.string.attention), TextToSpeech.QUEUE_ADD, null, null);
+            tts.speak(info.getText(), TextToSpeech.QUEUE_ADD, null, null);
+            allalerts.addView(view);
         }
     }
 
     public void back(View view){
-
         this.finish();
     }
 
