@@ -31,7 +31,13 @@
     <string name="no">No</string>
     <string name="ok" translatable="false">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="loading">Loading…</string>
     <string name="database_error">Database Error!</string>
+    <string name="error_invalid_credentials">Invalid email or password. Please try again.</string>
+    <string name="error_network">A network error has occurred. Please, check your internet connection and try again.</string>
+    <string name="error_weak_password">Weak password. The Password must be at least 6 characters long.</string>
+    <string name="error_user_exists">There is already a user with the email you entered.</string>
     <string name="emergencies">Show Emergencies</string>
     <string name="Category">Category of the event</string>
     <string name="Location">Location of the event</string>

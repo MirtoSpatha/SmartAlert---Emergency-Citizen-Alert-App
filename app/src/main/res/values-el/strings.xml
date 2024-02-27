@@ -30,7 +30,13 @@
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>
     <string name="cancel">Ακύρωση</string>
+    <string name="take_photo">Τράβα Φωτογραφία</string>
+    <string name="loading">Φόρτωση…</string>
     <string name="database_error">Σφάλμα Βάσης Δεδομένων!</string>
+    <string name="error_invalid_credentials">Μη έγκυρο email ή κωδικός πρόσβασης. Παρακαλώ προσπαθήστε ξανά.</string>
+    <string name="error_network">Παρουσιάστηκε σφάλμα δικτύου. Παρακαλώ, ελέγξτε τη σύνδεσή σας και προσπαθήστε ξανά.</string>
+    <string name="error_weak_password">Αδύναμος Κωδικός Πρόσβασης. Ο Κωδικός πρέπει να αποτελείται από τουλάχιστον 6 χαρακτήρες.</string>
+    <string name="error_user_exists">Υπάρχει ήδη χρήστης με το email που εισαγάγατε.</string>
     <string name="emergencies">Εμφάνιση Περιστατικών</string>
     <string name="Category">Κατηγορία Περιστατικού</string>
     <string name="Location">Τοποθεσία Περιστατικού</string>
@@ -97,7 +103,7 @@
         <item>Πυρκαγιά</item>
         <item>Πλημμύρα</item>
         <item>Σεισμός</item>
-        <item>Καταγίδα</item>
+        <item>Καταιγίδα</item>
         <item>Καύσωνας</item>
         <item>Χιονόπτωση</item>
         <item>Θυελλώδεις Άνεμοι</item>

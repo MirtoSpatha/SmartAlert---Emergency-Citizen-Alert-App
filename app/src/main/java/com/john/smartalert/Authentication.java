@@ -18,8 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -79,7 +83,18 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                                 reference2.child(user.getUid()).child("statistics").setValue(null);
                                 showMessage(getString(R.string.success),getString(R.string.user_profile_created));
                             }else {
-                                showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
+                                try {
+                                    throw task.getException();
+                                } catch(FirebaseAuthWeakPasswordException e) {
+                                    showMessage(getString(R.string.error),getString(R.string.error_weak_password));
+                                }  catch(FirebaseAuthUserCollisionException e) {
+                                    showMessage(getString(R.string.error),getString(R.string.error_user_exists));
+                                }catch(FirebaseNetworkException e) {
+                                    showMessage(getString(R.string.error),getString(R.string.error_network));
+                                } catch(Exception e) {
+                                    showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
+                                }
+                                //showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                             }
                         }
                     });
@@ -119,7 +134,17 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                             startActivity(intent);
                         }
                     }else {
-                        showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
+                        try {
+                            throw task.getException();
+                        } catch(FirebaseAuthInvalidCredentialsException e) {
+                            showMessage(getString(R.string.error),getString(R.string.error_invalid_credentials));
+                        } catch(FirebaseNetworkException e) {
+                            showMessage(getString(R.string.error),getString(R.string.error_network));
+                        }catch(Exception e) {
+                            showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
+                        }
+
+                        //showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                     }
                 }
             });

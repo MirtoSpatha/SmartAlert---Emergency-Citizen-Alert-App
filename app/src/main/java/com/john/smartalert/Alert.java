@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class Alert extends AppCompatActivity {
 
-    TextView textView4, textView5, Address, Category, Time,info;
+    TextView textView4, Address, Category, Time,info;
     String fullname, authId, language;
     Integer count;
     ArrayList<String> address,category,time;
