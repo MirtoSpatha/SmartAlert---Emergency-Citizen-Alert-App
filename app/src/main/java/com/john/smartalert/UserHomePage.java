@@ -81,59 +81,62 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
     }
 
     public void alerts(View view){
+        ArrayList<String> address = new ArrayList<>();
+        ArrayList<String> category = new ArrayList<>();
+        ArrayList<String> time = new ArrayList<>();
+        final boolean[] no_alert = {false};
+        Intent intent = new Intent(UserHomePage.this, Alert.class);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String, String> alert = new HashMap<>();
-                alert.put("alertKey", snapshot.getKey());
-                ArrayList<String> all_alerts = new ArrayList<>();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    System.out.println(data);
-                    alert.put(data.getKey().toString(), data.getValue().toString());
-                    all_alerts.add(data.child("Address").getValue().toString()+"|"+data.child("Category").getValue().toString()+"|"+data.child("Time").getValue().toString()+" ,");
-                }
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-                LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
-                ;
-                LocalDateTime now = LocalDateTime.now();
-                Duration duration = Duration.between(date, LocalDateTime.now());
-                if (duration.toHours() < 24) {
-                    String[] temp = alert.get("Location").split(",");
-                    double lat = Double.parseDouble(temp[0]);
-                    double lon = Double.parseDouble(temp[1]);
-                    String[] location = userLocation.split(",");
-                    double ulat = Double.parseDouble(location[0]);
-                    double ulon = Double.parseDouble(location[1]);
-                    double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
-                    if (distance <= 10) {
-                        Intent intent = new Intent(UserHomePage.this, Alert.class);
-                        intent.putExtra("fullname", fullname);
-                        intent.putExtra("authId", authId);
-                        intent.putExtra("Address", alert.get("Address"));
-                        intent.putExtra("Category", alert.get("Category"));
-                        intent.putExtra("Time", alert.get("Time"));
-                        startActivity(intent);
+                    String loc = "";
+                    String tim = "";
+                    for (DataSnapshot d : data.getChildren()){
+                        if(d.getKey().equals("Address")){
+                            address.add(d.getValue().toString());
+                        }
+                        if(d.getKey().equals("Category")){
+                            category.add(d.getValue().toString());
+                        }
+                        if(d.getKey().equals("Time")){
+                            time.add(d.getValue().toString());
+                            tim = d.getValue().toString();
+                        }
+                        if(d.getKey().equals("Location")){
+                            loc = d.getValue().toString();
+                        }
+                    }
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+                    LocalDateTime date = LocalDateTime.parse(tim, formatter);
+                    Duration duration = Duration.between(date, LocalDateTime.now());
+                    if (duration.toHours() < 24) {
+                        String[] temp = loc.split(",");
+                        double lat = Double.parseDouble(temp[0]);
+                        double lon = Double.parseDouble(temp[1]);
+                        String[] location = userLocation.split(",");
+                        double ulat = Double.parseDouble(location[0]);
+                        double ulon = Double.parseDouble(location[1]);
+                        double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
+                        no_alert[0] = !(distance <= 10);
                     }
                     else{
-                        Intent intent = new Intent(UserHomePage.this, Alert.class);
-                        intent.putExtra("fullname", fullname);
-                        intent.putExtra("authId", authId);
-                        intent.putExtra("Address", "");
-                        intent.putExtra("Category", "");
-                        intent.putExtra("Time", "");
-                        startActivity(intent);
+                        no_alert[0] = true;
                     }
                 }
-                else{
-                    Intent intent = new Intent(UserHomePage.this, Alert.class);
-                    intent.putExtra("fullname", fullname);
-                    intent.putExtra("authId", authId);
-                    intent.putExtra("Address", "");
-                    intent.putExtra("Category", "");
-                    intent.putExtra("Time", "");
-                    startActivity(intent);
+                if(no_alert[0]){
+                    intent.putStringArrayListExtra("AddressList", new ArrayList<>());
+                    intent.putStringArrayListExtra("CategoryList", new ArrayList<>());
+                    intent.putStringArrayListExtra("TimeList", new ArrayList<>());
                 }
+                else{
+                    intent.putStringArrayListExtra("AddressList", address);
+                    intent.putStringArrayListExtra("CategoryList", category);
+                    intent.putStringArrayListExtra("TimeList", time);
+                }
+                intent.putExtra("fullname", fullname);
+                intent.putExtra("authId", authId);
+                startActivity(intent);
             }
 
             @Override
@@ -156,8 +159,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                 LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
-                ;
-                LocalDateTime now = LocalDateTime.now();
                 Duration duration = Duration.between(date, LocalDateTime.now());
                 if (duration.toHours() < 24) {
                     String[] temp = alert.get("Location").split(",");
@@ -171,9 +172,9 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         Intent intent = new Intent(UserHomePage.this, Alert.class);
                         intent.putExtra("fullname", fullname);
                         intent.putExtra("authId", authId);
-                        intent.putExtra("Address", alert.get("Address"));
-                        intent.putExtra("Category", alert.get("Category"));
-                        intent.putExtra("Time", alert.get("Time"));
+                        intent.putExtra("AddressList", new ArrayList<>().add(alert.get("Address")));
+                        intent.putExtra("CategoryList", new ArrayList<>().add(alert.get("Category")));
+                        intent.putExtra("TimeList", new ArrayList<>().add(alert.get("Time")));
                         startActivity(intent);
 
                         reference2 = database.getReference("Users/" + authId + "/statistics/" + alert.get("alertKey"));

@@ -30,6 +30,7 @@
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>
     <string name="cancel">Ακύρωση</string>
+    <string name="database_error">Σφάλμα Βάσης Δεδομένων!</string>
     <string name="emergencies">Εμφάνιση Περιστατικών</string>
     <string name="Category">Κατηγορία Περιστατικού</string>
     <string name="Location">Τοποθεσία Περιστατικού</string>

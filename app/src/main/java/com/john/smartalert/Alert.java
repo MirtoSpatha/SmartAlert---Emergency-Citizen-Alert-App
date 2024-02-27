@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -24,7 +26,9 @@ import java.util.Map;
 public class Alert extends AppCompatActivity {
 
     TextView textView4, Address, Category, Time,info;
-    String fullname, authId, language, address,category,time;
+    String fullname, authId, language;
+    Integer count;
+    ArrayList<String> address,category,time;
     FirebaseDatabase database;
     DatabaseReference reference;
     LinearLayout allalerts;
@@ -43,7 +47,17 @@ public class Alert extends AppCompatActivity {
         textView4.setText(getString(R.string.hello_user)+fullname+getString(R.string.ongoing_alerts_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Alerts");
-        if(address.equals("") && category.equals("") && time.equals("")){
+        address = getIntent().getStringArrayListExtra("AddressList");
+        category = getIntent().getStringArrayListExtra("CategoryList");
+        time = getIntent().getStringArrayListExtra("TimeList");
+        if(address.size() == category.size() && address.size() == time.size()){
+            count = address.size();
+        }
+        else{
+            showMessage(getString(R.string.error),getString(R.string.database_error));
+            this.finish();
+        }
+        if(address.isEmpty() && category.isEmpty() && time.isEmpty()){
             info.setText(getString(R.string.no_ongoing_alerts));
         }
         TextToSpeech.OnInitListener  initListener= new TextToSpeech.OnInitListener() {
@@ -56,8 +70,6 @@ public class Alert extends AppCompatActivity {
         };
         tts = new TextToSpeech(this,initListener);
         allalerts = findViewById(R.id.allalerts);
-        HashMap<String, HashMap<String,String>> alerts = new HashMap<>();
-        int i=0;
         /*
         for (String s:) {
             String[] categories =s.split("\\|");
@@ -77,24 +89,22 @@ public class Alert extends AppCompatActivity {
             i++;
         }
          */
-        alerts.forEach((s, stringStringHashMap) -> {
+        for(int i=0;i<count;i++){
             View view = LayoutInflater.from(this).inflate(R.layout.alert_item, null);
-            address = getIntent().getStringExtra("address");
-            category = getIntent().getStringExtra("category");
-            time = getIntent().getStringExtra("time");
             Address = view.findViewById(R.id.region);
             Category = view.findViewById(R.id.category2);
             Time = view.findViewById(R.id.time2);
             info = view.findViewById(R.id.alertInfo);
-            Address.setText(address);
-            Category.setText(category);
-            Time.setText(time);
+            Address.setText(address.get(i));
+            Category.setText(category.get(i));
+            Time.setText(time.get(i));
+            int finalI = i;
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Map<String, String> data = (Map<String, String>) snapshot.getValue();
                     System.out.println(data.get("Comments"));
-                    switch (category) {
+                    switch (category.get(finalI)) {
                         case ("Fire"): {
                             info.setText(getString(R.string.alert_text_intro) + getString(R.string.fire_text));
                             break;
@@ -134,11 +144,15 @@ public class Alert extends AppCompatActivity {
 
                 }
             });
-        });
+        }
     }
 
     public void back(View view){
 
         this.finish();
+    }
+
+    void showMessage(String title, String message){
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
     }
 }
