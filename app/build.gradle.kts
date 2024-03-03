@@ -1,3 +1,5 @@
+import com.android.tools.build.bundletool.device.activitymanager.ResourceConfigParser
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -15,6 +17,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        resourceConfigurations += listOf("en", "el")
     }
 
     buildTypes {

@@ -18,31 +18,25 @@ import java.util.HashMap;
 
 public class Emergencies extends AppCompatActivity {
 
-    HashMap<String,HashMap<String,String>> emergencies;
-    ArrayList<String> result;
-
-    String language;
-    LinearLayout groups;
-    RequestQueue requestQueue;
-    ArrayList<String> address;
+    private HashMap<String,HashMap<String,String>> emergencies;
+    private ArrayList<String> result, address;
+    private String language;
+    private LinearLayout groups;
+    private RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emergencies_page);
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(Emergencies.this, language);
-        //recreate();
         requestQueue = Volley.newRequestQueue(this);
         result = getIntent().getStringArrayListExtra("Results");
         address = getIntent().getStringArrayListExtra("Address");
-//        System.out.println(address);
-//        System.out.println(result.get(0));
         emergencies =new HashMap<>();
         groups = findViewById(R.id.allGroups);
         int i=0;
         for (String s:result) {
             String[] categories =s.split("\\|");
-//            System.out.println(categories[0]);
             HashMap<String,String> map = new HashMap<>();
             String[] group = categories[0].split("=");
             map.put(group[0],group[1]);
@@ -58,7 +52,6 @@ public class Emergencies extends AppCompatActivity {
             i++;
         }
         emergencies.forEach((s, stringStringHashMap) -> {
-
             View view = LayoutInflater.from(this).inflate(R.layout.group_emergence,null);
             Button b = view.findViewById(R.id.inspect);
             b.setTag(s);
@@ -74,13 +67,11 @@ public class Emergencies extends AppCompatActivity {
             reports.setText(stringStringHashMap.get("Reports"));
             groups.addView(view);
         });
-//        System.out.println(emergencies);
     }
 
     public void inspectEmergence(View view){
         String tag = view.getTag().toString();
         HashMap<String,String> group = emergencies.get(tag);
-        System.out.println(group);
         Intent intent = new Intent(this,EmergenciesDetails.class);
         intent.putExtra("Group",group.get("Group"));
         intent.putExtra("Location",group.get("Center"));

@@ -169,12 +169,12 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getItemAtPosition(position).toString().equals("English") || parent.getItemAtPosition(position).toString().equals("Αγγλικά")){
-            setLocale(this, "en-US");
+            setLocale(this, "en");
             //finish();
             //startActivity(getIntent());
         }
         else if (parent.getItemAtPosition(position).toString().equals("Greek") || parent.getItemAtPosition(position).toString().equals("Ελληνικά")){
-            setLocale(this, "el-GR");
+            setLocale(this, "el");
             //finish();
             //startActivity(getIntent());
         }
@@ -182,7 +182,7 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        setLocale(this, "en-US");
+        setLocale(this, "en");
         //();
         //startActivity(getIntent());
     }

@@ -14,12 +14,10 @@ import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -29,12 +27,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 public class Camera extends AppCompatActivity {
-    String authid, language;
+    private String authid, language;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-//    Button bTakePicture, bRecording;
-    StorageReference storageReference;
     private ImageCapture imageCapture;
-    PreviewView previewView;
+    private PreviewView previewView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +38,11 @@ public class Camera extends AppCompatActivity {
         previewView = findViewById(R.id.previewView);
         authid = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
-
-        LifecycleCameraController cameraController = new LifecycleCameraController(this);
+        Authentication.setLocale(Camera.this, language);
+        /*LifecycleCameraController cameraController = new LifecycleCameraController(this);
         cameraController.bindToLifecycle(this);
         cameraController.setCameraSelector(CameraSelector.DEFAULT_BACK_CAMERA);
-        previewView.setController(cameraController);
+        previewView.setController(cameraController);*/
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -60,17 +56,6 @@ public class Camera extends AppCompatActivity {
             }
 
         }, getExecutor());
-
-        /*ImageCapture imageCapture =
-                new ImageCapture.Builder()
-                        .setTargetRotation(previewView.getDisplay().getRotation())
-                        .build();
-
-        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imageAnalysis, preview);*/
-     /*   ImageCapture imageCapture =
-                new ImageCapture.Builder()
-                        .setTargetRotation(previewView.getDisplay().getRotation())
-                        .build();*/
     }
 
     private Executor getExecutor() {
@@ -100,10 +85,6 @@ public class Camera extends AppCompatActivity {
 
     @SuppressLint("RestrictedApi")
     public void takePhoto(View view){
- /*       long timeStamp = System.currentTimeMillis();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timeStamp);
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");*/
         findViewById(R.id.loading).setVisibility(View.VISIBLE);
 
         imageCapture.takePicture(
@@ -122,8 +103,8 @@ public class Camera extends AppCompatActivity {
                         intent.putExtra("image",data);
                         intent.putExtra("filename",filename);
                         setResult(Activity.RESULT_OK,intent);
-                        Authentication.setLocale(Camera.this, language);
                         finish();
+                        Authentication.setLocale(Camera.this, language);
                     }
 
                     @Override
@@ -131,19 +112,6 @@ public class Camera extends AppCompatActivity {
                         super.onPostviewBitmapAvailable(bitmap);
                     }
                 }
-            /*new ImageCapture.OnImageSavedCallback() {
-                @Override
-                public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                    Toast.makeText(Camera.this,"Saving...",Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(@NonNull ImageCaptureException exception) {
-                    Toast.makeText(Camera.this,"Error: "+exception.getMessage(),Toast.LENGTH_SHORT).show();
-
-
-                }
-            }*/
         );
     }
 

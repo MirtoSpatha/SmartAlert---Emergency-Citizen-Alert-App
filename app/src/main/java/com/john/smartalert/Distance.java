@@ -1,7 +1,7 @@
 package com.john.smartalert;
 
 public class Distance {
-    static double EARTH_RADIUS = 6371;
+    private static double EARTH_RADIUS = 6371;
     static double haversine(double val) {
         return Math.pow(Math.sin(val / 2), 2);
     }

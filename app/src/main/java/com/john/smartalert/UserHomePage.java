@@ -34,14 +34,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserHomePage extends AppCompatActivity implements LocationListener {
-    String fullname, authId, language;
-    TextView textView2;
+    static MyTts tts;
+    private String fullname, authId, language;
+    private TextView textView2;
     private int ACCESS_FINE_LOCATION_CODE = 1;
     static LocationManager locationManager;
     static String userLocation;
-    FirebaseDatabase database;
-    DatabaseReference reference, reference2;
-    SharedPreferences preferences;
+    private FirebaseDatabase database;
+    private DatabaseReference reference, reference2;
+    private SharedPreferences preferences;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -52,6 +53,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         authId = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(UserHomePage.this, language);
+        tts = new MyTts(this,language);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Alerts");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -155,7 +157,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 alert.put("alertKey", snapshot.getKey());
                 for (DataSnapshot data : snapshot.getChildren()) {
                     alert.put(data.getKey().toString(), data.getValue().toString());
-                    System.out.println(data.getKey()+"  "+data.getValue());
+//                    System.out.println(data.getKey()+"  "+data.getValue());
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                 LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
@@ -286,17 +288,5 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         DatabaseReference reference = database.getReference("Users");
         reference.child(authId).child("Location").setValue(userLocation);*/
         //locationManager.removeUpdates(this);
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
     }
 }

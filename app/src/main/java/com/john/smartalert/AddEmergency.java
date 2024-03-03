@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -90,37 +91,34 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
        cameraPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-                    @Override
-                    public void onActivityResult(Boolean result) {
-                        if(result){
-                            Toast.makeText(getApplicationContext(), getString(R.string.camera_granted), Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(), getString(R.string.camera_denied), Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-        storagePermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
             @Override
             public void onActivityResult(Boolean result) {
                 if(result){
-                    Toast.makeText(getApplicationContext(), getString(R.string.storage_granted), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.camera_granted), Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), getString(R.string.storage_denied), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.camera_denied), Toast.LENGTH_SHORT).show();
 
                 }
             }
-        });
-                if (ContextCompat.checkSelfPermission(AddEmergency.this,
-                        android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    cameraPermission.launch(android.Manifest.permission.CAMERA);
-                }
-        if (ContextCompat.checkSelfPermission(AddEmergency.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            cameraPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
+       });
+       storagePermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+           @Override
+           public void onActivityResult(Boolean result) {
+               if(result){
+                   Toast.makeText(getApplicationContext(), getString(R.string.storage_granted), Toast.LENGTH_SHORT).show();
+               }
+               else{
+                   Toast.makeText(getApplicationContext(), getString(R.string.storage_denied), Toast.LENGTH_SHORT).show();
+               }
+           }
+       });
+       if (ContextCompat.checkSelfPermission(AddEmergency.this,
+               android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AddEmergency.this,
+               Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+           ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE},5);
+           //           cameraPermission.launch(android.Manifest.permission.CAMERA);
+       }
     }
 
     @Override
@@ -287,3 +285,4 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
         }).show();
     }
 }
+

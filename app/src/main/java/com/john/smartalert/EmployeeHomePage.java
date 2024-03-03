@@ -32,19 +32,14 @@ import java.util.List;
 import java.util.Locale;
 
 public class EmployeeHomePage extends AppCompatActivity {
-    String fullname,authId,language;
-    TextView textView24;
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    DatabaseReference reference2;
-    RequestQueue requestQueue;
-    ArrayList<String> result;
-    ArrayList<String> address;
-//    HashMap<String,Object> newEmergencies;
-    JSONObject newEmergencies ;
-//    HashMap<String,Object> alerts;
-    JSONObject alerts ;
-    Groups groups;
+    private String fullname,authId,language;
+    private TextView textView24;
+    private FirebaseDatabase database;
+    private DatabaseReference reference, reference2;
+    private RequestQueue requestQueue;
+    ArrayList<String> result,address;
+    JSONObject newEmergencies, alerts;
+    private Groups groups;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +48,10 @@ public class EmployeeHomePage extends AppCompatActivity {
         authId = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(EmployeeHomePage.this, language);
-        //recreate();
         textView24 = findViewById(R.id.textView24);
         textView24.setText(getString(R.string.welcome)+fullname+getString(R.string.employee_homepage_intro));
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("New Emergency");
-//        newEmergencies = new HashMap<>();
         newEmergencies = new JSONObject();
         requestQueue = Volley.newRequestQueue(this);
         reference.addValueEventListener(new ValueEventListener() {
@@ -90,7 +83,6 @@ public class EmployeeHomePage extends AppCompatActivity {
             }
         });
         reference2 = database.getReference("Alerts");
-//        alerts = new HashMap<>();
         alerts = new JSONObject();
         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -134,29 +126,11 @@ public class EmployeeHomePage extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        System.out.println(body);
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST,
                 url, body, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-               /*     address = new ArrayList<>();
-                    groups = new ObjectMapper().readerFor(Groups.class).readValue(String.valueOf(response));
-                    groups.getGroups().forEach((s, stringStringHashMap) -> {
-                        System.out.println(stringStringHashMap);
-                        String[] loc = stringStringHashMap.get("center").split(",");
-                        new Thread(()->{
-                            List<Address> addresses;
-                            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-                            try {
-                                addresses = geocoder.getFromLocation(Double.parseDouble(loc[0]),Double.parseDouble(loc[1]),1);
-                                address.add(addresses.get(0).getAddressLine(0));
-                                    System.out.println(addresses.get(0));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }).start();
-                    });*/
                     result = new ArrayList<>();
                     address = new ArrayList<>();
 

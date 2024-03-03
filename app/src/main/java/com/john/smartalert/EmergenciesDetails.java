@@ -35,18 +35,17 @@ import java.util.Map;
 
 public class EmergenciesDetails extends AppCompatActivity {
 
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    StorageReference storageReference;
-    LinearLayout incident;
-    String group, language;
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+    private StorageReference storageReference;
+    private LinearLayout incident;
+    private String group, language;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emergencies_details);
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(EmergenciesDetails.this, language);
-        //recreate();
 
         database = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("new_images/");
