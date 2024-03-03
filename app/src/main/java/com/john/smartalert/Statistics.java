@@ -37,7 +37,7 @@ public class Statistics extends AppCompatActivity {
         authId = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(Statistics.this, language);
-        //recreate();
+        //recreate()
         textView3 = findViewById(R.id.textView3);
         textView3.setText(getString(R.string.welcome)+fullname+getString(R.string.statistics_intro));
         database = FirebaseDatabase.getInstance();
@@ -51,78 +51,63 @@ public class Statistics extends AppCompatActivity {
                             String address = emergencies.child("Address").getValue().toString();
                             String time = emergencies.child("Time").getValue().toString();
                             String stats = Objects.requireNonNull(address).concat("\n").concat(Objects.requireNonNull(time));
+
                             if(allStatistics == null){
-                                for(DataSnapshot d : emergencies.getChildren()){
-                                    allStatistics = allStatistics.concat(Objects.requireNonNull(d.getValue()).toString()).concat("\n");
-                                }
+                                allStatistics = "";
                             }
-                            else {
-                                for(DataSnapshot d : emergencies.getChildren()){
-                                    allStatistics = allStatistics.concat(Objects.requireNonNull(d.getValue()).toString()).concat("\n");
-                                }
+                            allStatistics = allStatistics.concat("\n");
+                            for(DataSnapshot d : emergencies.getChildren()){
+                                allStatistics = allStatistics.concat(Objects.requireNonNull(d.getKey().toString())).concat(": ").concat(Objects.requireNonNull(d.getValue()).toString()).concat("\n");
                             }
                             switch (Objects.requireNonNull(category)){
                                 case ("Fire"):{
                                     if(fireStatistics == null){
-                                        fireStatistics = stats;
+                                        fireStatistics = "";
                                     }
-                                    else {
-                                        fireStatistics = fireStatistics.concat(stats);
-                                    }
+                                    fireStatistics = fireStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                                 case ("Flood"):{
                                     if(floodStatistics== null){
-                                        floodStatistics = stats;
+                                        floodStatistics = "";
                                     }
-                                    else {
-                                        floodStatistics = floodStatistics.concat(stats);
-                                    }
+                                    floodStatistics = floodStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                                 case ("Earthquake"):{
                                     if(earthquakeStatistics== null){
-                                        earthquakeStatistics = stats;
+                                        earthquakeStatistics = "";
                                     }
-                                    else {
-                                        earthquakeStatistics = earthquakeStatistics.concat(stats);
-                                    }
+                                    earthquakeStatistics = earthquakeStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                                 case ("Thunderstorm"):{
                                     if(thunderstormStatistics== null){
-                                        thunderstormStatistics = stats;
+                                        thunderstormStatistics = "";
                                     }
-                                    else {
-                                        thunderstormStatistics = thunderstormStatistics.concat(stats);
-                                    }
+                                    thunderstormStatistics = thunderstormStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                                 case ("Heatwave"):{
                                     if(heatwaveStatistics== null){
-                                        heatwaveStatistics = stats;
+                                        heatwaveStatistics = "";
                                     }
-                                    else {
-                                        heatwaveStatistics = heatwaveStatistics.concat(stats);
-                                    }
+                                    heatwaveStatistics = heatwaveStatistics.concat("\n").concat(stats).concat("\n");
+
                                     break;
                                 }
                                 case ("Tornado"):{
                                     if(tornadoStatistics== null){
-                                        tornadoStatistics = stats;
+                                        tornadoStatistics = "";
                                     }
-                                    else {
-                                        tornadoStatistics = tornadoStatistics.concat(stats);
-                                    }
+                                    tornadoStatistics = tornadoStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                                 case ("Blizzard"):{
                                     if(blizzardStatistics== null){
-                                        blizzardStatistics = stats;
+                                        blizzardStatistics = "";
                                     }
-                                    else {
-                                        blizzardStatistics = blizzardStatistics.concat(stats);
-                                    }
+                                    blizzardStatistics = blizzardStatistics.concat("\n").concat(stats).concat("\n");
                                     break;
                                 }
                             }
