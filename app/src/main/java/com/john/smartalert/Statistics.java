@@ -50,16 +50,20 @@ public class Statistics extends AppCompatActivity {
                             String category = emergencies.child("Category").getValue().toString();
                             String address = emergencies.child("Address").getValue().toString();
                             String time = emergencies.child("Time").getValue().toString();
-                            String stats = Objects.requireNonNull(address).concat(Objects.requireNonNull(time));
-                            if(allStatistics== null){
-                                allStatistics = Objects.requireNonNull(emergencies.getValue()).toString();
+                            String stats = Objects.requireNonNull(address).concat("\n").concat(Objects.requireNonNull(time));
+                            if(allStatistics == null){
+                                for(DataSnapshot d : emergencies.getChildren()){
+                                    allStatistics = allStatistics.concat(Objects.requireNonNull(d.getValue()).toString()).concat("\n");
+                                }
                             }
                             else {
-                                allStatistics = allStatistics.concat(Objects.requireNonNull(emergencies.getValue()).toString());
+                                for(DataSnapshot d : emergencies.getChildren()){
+                                    allStatistics = allStatistics.concat(Objects.requireNonNull(d.getValue()).toString()).concat("\n");
+                                }
                             }
                             switch (Objects.requireNonNull(category)){
                                 case ("Fire"):{
-                                    if(fireStatistics== null){
+                                    if(fireStatistics == null){
                                         fireStatistics = stats;
                                     }
                                     else {
