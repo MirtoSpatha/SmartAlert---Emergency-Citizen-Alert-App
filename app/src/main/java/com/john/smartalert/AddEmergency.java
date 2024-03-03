@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -282,7 +283,7 @@ public class AddEmergency extends AppCompatActivity implements AdapterView.OnIte
                 ((Activity) getBaseContext()).finish();
                 Authentication.setLocale(AddEmergency.this, language);
             }
-        }).show();
+        }).show().getWindow().setGravity(Gravity.CENTER);
     }
 }
 
