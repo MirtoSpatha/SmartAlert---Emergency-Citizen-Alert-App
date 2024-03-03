@@ -35,7 +35,7 @@ import java.util.HashMap;
 
 public class UserHomePage extends AppCompatActivity implements LocationListener {
     static MyTts tts;
-    private String fullname, authId, language;
+    String fullname, authId, language;
     private TextView textView2;
     private int ACCESS_FINE_LOCATION_CODE = 1;
     static LocationManager locationManager;
@@ -60,7 +60,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, this);
-            //userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude()+","+locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
         } else {
             requestLocationPermission();
         }
@@ -157,7 +156,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 alert.put("alertKey", snapshot.getKey());
                 for (DataSnapshot data : snapshot.getChildren()) {
                     alert.put(data.getKey().toString(), data.getValue().toString());
-//                    System.out.println(data.getKey()+"  "+data.getValue());
                 }
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                 LocalDateTime date = LocalDateTime.parse(alert.get("Time"), formatter);
@@ -283,10 +281,5 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("location", userLocation);
         editor.apply();
-//        System.out.println(userLocation);
-        /*database =FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Users");
-        reference.child(authId).child("Location").setValue(userLocation);*/
-        //locationManager.removeUpdates(this);
     }
 }

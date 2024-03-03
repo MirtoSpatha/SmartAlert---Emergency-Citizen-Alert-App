@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,12 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Locale;
 
 public class Authentication extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    EditText email,password,fullname;
-    FirebaseAuth auth;
-    FirebaseUser user;
-    FirebaseDatabase database;
-    Spinner spinner;
-
+    private EditText email,password,fullname;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private FirebaseDatabase database;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,6 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        if (user!=null){
-            //Button b = findViewById(R.id.button);
-            //b.setVisibility(View.GONE);
-        }
         spinner = findViewById(R.id.spinner2);
         spinner.setOnItemSelectedListener(this);
         // Create an ArrayAdapter using the string array and a default spinner layout.
@@ -94,7 +90,6 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                                 } catch(Exception e) {
                                     showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                                 }
-                                //showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                             }
                         }
                     });
@@ -122,7 +117,6 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                             Intent intent = new Intent(Authentication.this, EmployeeHomePage.class);
                             intent.putExtra("fullname",auth.getCurrentUser().getDisplayName());
                             intent.putExtra("authId",auth.getUid().toString());
-                            //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivity(intent);
                         }
                         else
@@ -130,7 +124,6 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                             Intent intent = new Intent(Authentication.this, UserHomePage.class);
                             intent.putExtra("fullname",auth.getCurrentUser().getDisplayName());
                             intent.putExtra("authId",auth.getUid().toString());
-                            //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             startActivity(intent);
                         }
                     }else {
@@ -143,8 +136,6 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
                         }catch(Exception e) {
                             showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                         }
-
-                        //showMessage(getString(R.string.error),task.getException().getLocalizedMessage());
                     }
                 }
             });
@@ -152,7 +143,7 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
     }
 
     void showMessage(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show().getWindow().setGravity(Gravity.CENTER);;
     }
     public static void setLocale(Activity activity, String language){
         Locale locale = Locale.forLanguageTag(language);
@@ -170,20 +161,14 @@ public class Authentication extends AppCompatActivity implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(parent.getItemAtPosition(position).toString().equals("English") || parent.getItemAtPosition(position).toString().equals("Αγγλικά")){
             setLocale(this, "en");
-            //finish();
-            //startActivity(getIntent());
         }
         else if (parent.getItemAtPosition(position).toString().equals("Greek") || parent.getItemAtPosition(position).toString().equals("Ελληνικά")){
             setLocale(this, "el");
-            //finish();
-            //startActivity(getIntent());
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         setLocale(this, "en");
-        //();
-        //startActivity(getIntent());
     }
 }

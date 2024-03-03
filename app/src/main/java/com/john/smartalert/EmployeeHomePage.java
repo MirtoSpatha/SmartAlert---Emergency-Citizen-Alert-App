@@ -32,14 +32,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class EmployeeHomePage extends AppCompatActivity {
-    private String fullname,authId,language;
+    String fullname,authId,language;
     private TextView textView24;
     private FirebaseDatabase database;
     private DatabaseReference reference, reference2;
     private RequestQueue requestQueue;
     ArrayList<String> result,address;
-    JSONObject newEmergencies, alerts;
-    private Groups groups;
+    private JSONObject newEmergencies, alerts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +83,7 @@ public class EmployeeHomePage extends AppCompatActivity {
         });
         reference2 = database.getReference("Alerts");
         alerts = new JSONObject();
+
         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,6 +105,8 @@ public class EmployeeHomePage extends AppCompatActivity {
                         }
                     }
                     if (newEmergencies.length()>0){
+                        System.out.println(newEmergencies);
+                        System.out.println(alerts);
                         emergencies(newEmergencies,alerts);
                     }
                 }
@@ -133,11 +135,9 @@ public class EmployeeHomePage extends AppCompatActivity {
                 try {
                     result = new ArrayList<>();
                     address = new ArrayList<>();
-
                     int size = response.length();
                     if (size>2) {
                         for (int i = 0; i < size-2; i++) {
-                            System.out.println(response);
                             result.add(response.getString(String.valueOf(i)));
                             String[] temp = response.getString(String.valueOf(i)).split("\\|");
                             String[] center =temp[1].split("=");
@@ -153,9 +153,12 @@ public class EmployeeHomePage extends AppCompatActivity {
                                 }
                             }).start();
                         }
-                        System.out.println(response);
-                        //updateAlerts(response.getString("updateAlerts"));
-                        //updateEmergencies(response.getString("oldEmergencies"));
+                        if (!response.getString("updateAlerts").isEmpty()) {
+                            updateAlerts(response.getString("updateAlerts"));
+                        }
+                        if (!response.getString("oldEmergencies").isEmpty()){
+                            updateEmergencies(response.getString("oldEmergencies"));
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -191,7 +194,7 @@ public class EmployeeHomePage extends AppCompatActivity {
                     }
                     reference2 = database.getReference("All Emergency");
                     reference2.child(s).setValue(data);
-                    reference =database.getReference("New Emergency").child(snapshot.getKey());
+                    reference =  database.getReference("New Emergency").child(snapshot.getKey());
                     reference.removeValue();
                 }
 
@@ -200,7 +203,6 @@ public class EmployeeHomePage extends AppCompatActivity {
 
                 }
             });
-
         }
     }
 

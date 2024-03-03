@@ -39,7 +39,7 @@ public class EmergenciesDetails extends AppCompatActivity {
     private DatabaseReference reference;
     private StorageReference storageReference;
     private LinearLayout incident;
-    private String group, language;
+    String group, language;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +74,21 @@ public class EmergenciesDetails extends AppCompatActivity {
                             reference1.getFile(file).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<FileDownloadTask.TaskSnapshot> task) {
-                                    photo.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                                    if (task.isSuccessful()) {
+                                        photo.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                                    }
+                                    else {
+                                        photo.setImageResource(android.R.drawable.ic_menu_gallery);
+                                    }
+                                    System.out.println(task.isSuccessful());
                                 }
                             });
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
+                    }
+                    else {
+                        photo.setImageResource(R.drawable.image);
                     }
                     incident.addView(view);
                 }
@@ -107,7 +116,7 @@ public class EmergenciesDetails extends AppCompatActivity {
         Intent intent = new Intent(EmergenciesDetails.this,EmployeeHomePage.class);
         startActivity(intent);
     }
-//test@civilprotection.gr
+
     public void decline(View view){
         ArrayList<String> result = getIntent().getStringArrayListExtra("Results");
         ArrayList<String> address2 = getIntent().getStringArrayListExtra("Address2");

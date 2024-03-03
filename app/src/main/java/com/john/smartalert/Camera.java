@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 public class Camera extends AppCompatActivity {
-    private String authid, language;
+    String authid, language;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ImageCapture imageCapture;
     private PreviewView previewView;
@@ -39,10 +39,6 @@ public class Camera extends AppCompatActivity {
         authid = getIntent().getStringExtra("authId");
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(Camera.this, language);
-        /*LifecycleCameraController cameraController = new LifecycleCameraController(this);
-        cameraController.bindToLifecycle(this);
-        cameraController.setCameraSelector(CameraSelector.DEFAULT_BACK_CAMERA);
-        previewView.setController(cameraController);*/
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
@@ -64,29 +60,22 @@ public class Camera extends AppCompatActivity {
 
     @SuppressLint("RestrictedApi")
     private void startCameraX(ProcessCameraProvider cameraProvider) {
-
         cameraProvider.unbindAll();
-
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
         Preview preview = new Preview.Builder().build();
-
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
-
-
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
     }
 
     @SuppressLint("RestrictedApi")
     public void takePhoto(View view){
         findViewById(R.id.loading).setVisibility(View.VISIBLE);
-
         imageCapture.takePicture(
                 getExecutor(), new ImageCapture.OnImageCapturedCallback() {
                     @Override
@@ -114,5 +103,4 @@ public class Camera extends AppCompatActivity {
                 }
         );
     }
-
 }

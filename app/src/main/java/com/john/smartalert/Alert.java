@@ -4,6 +4,7 @@ import static com.john.smartalert.UserHomePage.tts;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,20 +13,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 
 public class Alert extends AppCompatActivity {
 
-    TextView textView4, Address, Category, Time,info;
+    private TextView textView4, Address, Category, Time,info;
     String fullname, authId, language, text;
-    Integer count;
-    ArrayList<String> address,category,time;
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    LinearLayout allalerts;
+    private Integer count;
+    private ArrayList<String> address,category,time;
+    private LinearLayout allalerts;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -38,8 +34,6 @@ public class Alert extends AppCompatActivity {
         Authentication.setLocale(Alert.this, language);
         textView4 = findViewById(R.id.textView4);
         textView4.setText(getString(R.string.hello_user)+fullname+getString(R.string.ongoing_alerts_intro));
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Alerts");
         address = getIntent().getStringArrayListExtra("AddressList");
         category = getIntent().getStringArrayListExtra("CategoryList");
         time = getIntent().getStringArrayListExtra("TimeList");
@@ -117,6 +111,6 @@ public class Alert extends AppCompatActivity {
     }
 
     void showMessage(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show();
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message).setCancelable(true).show().getWindow().setGravity(Gravity.CENTER);;
     }
 }

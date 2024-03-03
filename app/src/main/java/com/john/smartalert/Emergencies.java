@@ -10,26 +10,21 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Emergencies extends AppCompatActivity {
 
-    private HashMap<String,HashMap<String,String>> emergencies;
-    private ArrayList<String> result, address;
-    private String language;
+    HashMap<String,HashMap<String,String>> emergencies;
+    ArrayList<String> result, address;
+    String language;
     private LinearLayout groups;
-    private RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emergencies_page);
         language = this.getSharedPreferences("Settings", MODE_PRIVATE).getString("Language","");
         Authentication.setLocale(Emergencies.this, language);
-        requestQueue = Volley.newRequestQueue(this);
         result = getIntent().getStringArrayListExtra("Results");
         address = getIntent().getStringArrayListExtra("Address");
         emergencies =new HashMap<>();
@@ -82,5 +77,4 @@ public class Emergencies extends AppCompatActivity {
         intent.putExtra("Address2",getIntent().getStringArrayListExtra("Address"));
         startActivity(intent);
     }
-//test@civilprotection.gr
 }
