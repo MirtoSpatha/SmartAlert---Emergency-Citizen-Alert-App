@@ -63,7 +63,6 @@ public class EmergenciesDetails extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Map<String,String> data = (Map<String, String>) snapshot.getValue();
-                    System.out.println(data.get("Comments"));
                     comment.setText(data.get("Comments"));
                     location.setText(data.get("Location"));
                     time.setText(data.get("Time"));
@@ -80,7 +79,6 @@ public class EmergenciesDetails extends AppCompatActivity {
                                     else {
                                         photo.setImageResource(android.R.drawable.ic_menu_gallery);
                                     }
-                                    System.out.println(task.isSuccessful());
                                 }
                             });
                         } catch (IOException ex) {
@@ -131,7 +129,7 @@ public class EmergenciesDetails extends AppCompatActivity {
         }
         Intent intent = new Intent(EmergenciesDetails.this, Emergencies.class);
         intent.putStringArrayListExtra("Results",result);
-        intent.putStringArrayListExtra("Address2",address2);
+        intent.putStringArrayListExtra("Address",address2);
         startActivity(intent);
     }
 }

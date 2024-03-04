@@ -38,7 +38,9 @@ public class EmployeeHomePage extends AppCompatActivity {
     private DatabaseReference reference, reference2;
     private RequestQueue requestQueue;
     ArrayList<String> result,address;
+    private HashMap<String,String> tempAddress;
     private JSONObject newEmergencies, alerts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +107,6 @@ public class EmployeeHomePage extends AppCompatActivity {
                         }
                     }
                     if (newEmergencies.length()>0){
-                        System.out.println(newEmergencies);
-                        System.out.println(alerts);
                         emergencies(newEmergencies,alerts);
                     }
                 }
@@ -120,7 +120,7 @@ public class EmployeeHomePage extends AppCompatActivity {
     }
 
     private void emergencies(JSONObject newEmergencies,JSONObject Alerts){
-        String url = "http://10.0.2.2:8080/newemergance";
+        String url = "http://10.0.2.2:8080/emergence";
         JSONObject body = new JSONObject();
         try {
             body.put("alerts",Alerts);
@@ -134,7 +134,7 @@ public class EmployeeHomePage extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     result = new ArrayList<>();
-                    address = new ArrayList<>();
+                    tempAddress = new HashMap<>();
                     int size = response.length();
                     if (size>2) {
                         for (int i = 0; i < size-2; i++) {
@@ -142,12 +142,13 @@ public class EmployeeHomePage extends AppCompatActivity {
                             String[] temp = response.getString(String.valueOf(i)).split("\\|");
                             String[] center =temp[1].split("=");
                             String[] loc = center[1].split(",");
+                            final int j=i;
                             new Thread(()->{
                                 List<Address> addresses;
                                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                                 try {
                                     addresses = geocoder.getFromLocation(Double.parseDouble(loc[0]),Double.parseDouble(loc[1]),1);
-                                    address.add(addresses.get(0).getAddressLine(0));
+                                    tempAddress.put(String.valueOf(j),addresses.get(0).getAddressLine(0));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -206,7 +207,11 @@ public class EmployeeHomePage extends AppCompatActivity {
         }
     }
 
-    public void showTheEmergencies(View view){
+    public void showTheEmergencies(View view) {
+        address = new ArrayList<>();
+        for (int k=0;k<tempAddress.size();k++){
+            address.add(tempAddress.get(String.valueOf(k)));
+        }
         Intent intent = new Intent(EmployeeHomePage.this, Emergencies.class);
         intent.putStringArrayListExtra("Results",result);
         intent.putStringArrayListExtra("Address",address);

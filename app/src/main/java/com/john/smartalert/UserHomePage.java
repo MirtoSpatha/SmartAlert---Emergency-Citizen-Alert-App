@@ -71,7 +71,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         }
         ongoing_alerts();
         textView2 = findViewById(R.id.textView2);
-        textView2.setText(getString(R.string.welcome) + fullname + getString(R.string.user_homepage_intro));
+        textView2.setText(getString(R.string.welcome) +" "+ fullname + getString(R.string.user_homepage_intro));
     }
 
     public void add_emergency(View view) {
