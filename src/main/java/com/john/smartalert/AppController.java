@@ -21,8 +21,8 @@ public class AppController {
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping("/newemergance")
-    public HashMap<String,String> addMovieRating(@RequestBody String body) throws JsonProcessingException {//Map<String, String> body
+    @PostMapping("/emergence")
+    public HashMap<String,String> calcEmergence(@RequestBody String body) throws JsonProcessingException {//Map<String, String> body
         //create the 2 hashMaps. One for the alerts and 1 for the reported  incidents (new emergence)
         Emergencies emergencies = objectMapper.readValue(body,Emergencies.class);
         //remove from the new emergence the incidents that already been alerts
@@ -35,7 +35,6 @@ public class AppController {
                 emergencies.getNewEmerg().remove(s1);
             }
         });
-        System.out.println(emergencies.getNewEmerg());
         if (emergencies.getNewEmerg().isEmpty()){
             return new HashMap<>();
         }
@@ -79,7 +78,6 @@ public class AppController {
         StringBuilder old = new StringBuilder();
         oldEmergencies.forEach(s -> old.append(s).append(","));
         results.put("oldEmergencies",old.toString());
-        System.out.println(results);
         return results;
     }
 
@@ -191,11 +189,15 @@ public class AppController {
                                     result.add(new ArrayList<>());
                                 }
                                 result.get(i / 2).add(s);
+                                break;
                             }
                             //if there isn't any group that is near, create a new one
-                            else if (distance > 15 - (k * 5) && i == centers.size() - 1) {
+                            else if (distance > 15 - (k * 5) && i == centers.size() - 2) {
                                 result.add(new ArrayList<>());
                                 result.get((i / 2) + 1).add(s);
+                                centers.add(lat);
+                                centers.add(lon);
+                                break;
                             }
                         }
                     }
@@ -262,7 +264,7 @@ public class AppController {
             }
 
             Duration duration = Duration.between(date,LocalDateTime.parse(e.get("Time"),formatter));
-            if (duration.toSeconds() <= 600){
+            if (duration.toSeconds() <= 600){//10 minutes
                 tscore +=2;
             }
             else {

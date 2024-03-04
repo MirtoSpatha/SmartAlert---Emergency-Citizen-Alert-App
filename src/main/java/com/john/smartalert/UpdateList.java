@@ -33,8 +33,8 @@ public class UpdateList {
                 double elat = Double.parseDouble(t[0]);
                 double elon = Double.parseDouble(t[1]);
                 double dist = Calculations.calculateDistance2(alat, alon, elat, elon);
-                Duration duration = Duration.between(LocalDateTime.parse(map.get("Time"),formatter), LocalDateTime.parse(e.get("Time"),formatter));
-                if (dist<=10 && map.get("Category").equals(e.get("Category")) && duration.toHours() <= 48){
+                Duration duration = Duration.between(LocalDateTime.parse(map.get("StartTime"),formatter), LocalDateTime.parse(e.get("Time"),formatter));
+                if (dist<=10 && map.get("Category").equals(e.get("Category")) && duration.toHours() <= 50){
                     String g = map.remove("Group");
                     g = g.concat(s1+",");
                     map.put("Group",g);

@@ -26,12 +26,11 @@ public class SortList {
             List<String> temp = groups.get(i);
             double score = Double.parseDouble(temp.get(temp.size()-1));
             int j = i-1;
-            while (j >=0 && score > Double.parseDouble(groups.get(j).get(groups.get(j).size()-1))){
+            while (j >=0 && score > Double.parseDouble(sortedLIst.get(j).get(sortedLIst.get(j).size()-1))){
                 j--;
             }
             sortedLIst.add(j+1,temp);
         }
         return sortedLIst;
     }
-
 }
