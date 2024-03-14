@@ -39,8 +39,8 @@ public class Alert extends AppCompatActivity {
         time = getIntent().getStringArrayListExtra("TimeList");
         allalerts = findViewById(R.id.allalerts);
         if(address.isEmpty() && category.isEmpty() && time.isEmpty()){
-            textView4.setText(getString(R.string.no_alerts));
-            tts.speak(getString(R.string.no_alerts));
+            textView4.setText(getString(R.string.no_ongoing_alerts_message));
+            tts.speak(getString(R.string.no_ongoing_alerts_message));
         }
         else{
             if(address.size() == category.size() && address.size() == time.size()){

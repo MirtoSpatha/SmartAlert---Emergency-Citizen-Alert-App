@@ -43,6 +43,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
     private FirebaseDatabase database;
     private DatabaseReference reference, reference2;
     private SharedPreferences preferences;
+    private int no_alert =0;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -85,7 +86,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
         ArrayList<String> address = new ArrayList<>();
         ArrayList<String> category = new ArrayList<>();
         ArrayList<String> time = new ArrayList<>();
-        final boolean[] no_alert = {false};
+        no_alert = 0;
         Intent intent = new Intent(UserHomePage.this, Alert.class);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -93,25 +94,13 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                 for (DataSnapshot data : snapshot.getChildren()) {
                     String loc = "";
                     String tim = "";
-                    for (DataSnapshot d : data.getChildren()){
-                        if(d.getKey().equals("Address")){
-                            address.add(d.getValue().toString());
-                        }
-                        if(d.getKey().equals("Category")){
-                            category.add(d.getValue().toString());
-                        }
-                        if(d.getKey().equals("Time")){
-                            time.add(d.getValue().toString());
-                            tim = d.getValue().toString();
-                        }
-                        if(d.getKey().equals("Location")){
-                            loc = d.getValue().toString();
-                        }
-                    }
+                    tim = data.child("Time").getValue().toString();
+                    loc = data.child("Location").getValue().toString();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
                     LocalDateTime date = LocalDateTime.parse(tim, formatter);
                     Duration duration = Duration.between(date, LocalDateTime.now());
                     if (duration.toHours() < 24) {
+
                         String[] temp = loc.split(",");
                         double lat = Double.parseDouble(temp[0]);
                         double lon = Double.parseDouble(temp[1]);
@@ -119,18 +108,24 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         double ulat = Double.parseDouble(location[0]);
                         double ulon = Double.parseDouble(location[1]);
                         double distance = Distance.calculateDistance2(lat, lon, ulat, ulon);
-                        no_alert[0] = !(distance <= 10);
+                        if (distance <= 10){
+                            address.add(data.child("Address").getValue().toString());
+                            category.add(data.child("Category").getValue().toString());
+                            time.add(data.child("Time").getValue().toString());
+                            no_alert+=1;
+                        }
                     }
                     else{
-                        no_alert[0] = true;
+                        no_alert += 0;
                     }
                 }
-                if(no_alert[0]){
+                if(no_alert < 1){
                     intent.putStringArrayListExtra("AddressList", new ArrayList<>());
                     intent.putStringArrayListExtra("CategoryList", new ArrayList<>());
                     intent.putStringArrayListExtra("TimeList", new ArrayList<>());
                 }
                 else{
+                    System.out.println("ok");
                     intent.putStringArrayListExtra("AddressList", address);
                     intent.putStringArrayListExtra("CategoryList", category);
                     intent.putStringArrayListExtra("TimeList", time);
@@ -149,6 +144,7 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
     }
 
     public void ongoing_alerts() {
+        System.out.println(userLocation);
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -187,7 +183,6 @@ public class UserHomePage extends AppCompatActivity implements LocationListener 
                         reference2.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                System.out.println(snapshot.getValue());
                                 if (snapshot.getValue() == null) {
                                     reference2.child("Address").setValue(alert.get("Address"));
                                     reference2.child("Category").setValue(alert.get("Category"));
